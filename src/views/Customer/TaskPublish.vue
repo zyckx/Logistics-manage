@@ -131,10 +131,14 @@
       border
       style="width: 100%"
     >
-      <el-table-column prop="employee" label="员工号" />
-      <el-table-column prop="name" label="姓名" />
-      <el-table-column prop="phone" label="电话" />
-      <el-table-column prop="credit" label="是否有运输危险品运输资格证" />
+      <el-table-column prop="taskStart" label="起点" />
+      <el-table-column prop="taskEnd" label="终点" />
+      <el-table-column prop="taskName" label="货物名称" />
+      <el-table-column prop="taskWeight" label="重量" />
+      <el-table-column prop="isTask" label="是否危险" />
+      <el-table-column prop="customerName" label="客户名称" />
+      <el-table-column prop="customerPhone" label="客户电话" />
+      <el-table-column prop="freight" label="运费" />
       <el-table-column fixed="right" label="操作" width="150">
         <template #default="scope">
           <el-button
@@ -184,10 +188,14 @@ const dialogVisible = reactive({
 const tableData = reactive({
   tableData: [
     {
-      employee: "",
-      name: "111",
-      phone: "111",
-      credit: "111",
+      taskStart: "",
+      taskEnd: "",
+      taskName: "",
+      taskWeight: "",
+      isTask: "",
+      customerName: "",
+      customerPhone: "",
+      freight: "",
     },
   ],
   searchContent: "",

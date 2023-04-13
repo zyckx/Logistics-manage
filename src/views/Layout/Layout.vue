@@ -46,7 +46,7 @@ const SidebarList = computed(() => {
     case "2":
       return driverSiderbarList;
     case "3":
-      return cunstomSiderbarList;
+      return customerSiderbarList;
   }
 });
 const adminSidebarList = [
@@ -92,45 +92,45 @@ const driverSiderbarList = [
   {
     icon: "el-icon-ali-home",
     index: "/dashboard",
-    title: "系统首页",
+    title: "司机首页",
   },
   {
     icon: "el-icon-ali-cascades",
-    index: "2",
-    title: "信息表格",
-    subs: [
-      { index: "/department", title: "院系表" },
-      { index: "/major", title: "专业表1" },
-      { index: "/teacher", title: "教师表" },
-      { index: "/student", title: "学生表" },
-      { index: "/course", title: "课程表" },
-      { index: "/selectcourse", title: "选课表" },
-      { index: "/basetable", title: "基础表格" },
-    ],
+    index: "/driver-task",
+    title: "任务查看",
   },
-  { icon: "el-icon-ali-test", index: "/test", title: "测试页面" },
+  {
+    icon: "el-icon-ali-cascades",
+    index: "/driver-person",
+    title: "个人信息",
+  },
+  {
+    icon: "el-icon-ali-cascades",
+    index: "/driver-apply",
+    title: "申请",
+  },
 ];
-const cunstomSiderbarList = [
+const customerSiderbarList = [
   {
-    icon: "el-icon-ali-home",
-    index: "/dashboard",
-    title: "系统首页",
+    icon: "fa fa-home",
+    index: "/custom",
+    title: "客户首页",
   },
   {
-    icon: "el-icon-ali-cascades",
+    icon: "fa fa-car",
     index: "2",
-    title: "信息表格",
+    title: "运输任务",
     subs: [
-      { index: "/department", title: "院系表" },
-      { index: "/major", title: "专业表1" },
-      { index: "/teacher", title: "教师表" },
-      { index: "/student", title: "学生表" },
-      { index: "/course", title: "课程表" },
-      { index: "/selectcourse", title: "选课表" },
-      { index: "/basetable", title: "基础表格" },
+      {
+        index: "/task-publish",
+        title: "任务发布",
+      },
+      {
+        index: "/current-task",
+        title: "当前任务",
+      },
     ],
   },
-  { icon: "el-icon-ali-test", index: "/test", title: "测试页面" },
 ];
 
 // defineExpose 可以省略

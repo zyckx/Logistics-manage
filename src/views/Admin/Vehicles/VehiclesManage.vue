@@ -1,225 +1,286 @@
 <template>
-  <div>
-    <div class="crumbs">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item>
-          <i class="el-icon-ali-cascades" /> 学生信息表格
-        </el-breadcrumb-item>
-      </el-breadcrumb>
+  <div class="container">
+    <!-- 搜索、清除搜索、多选删除、添加 -->
+    <div class="handle-box">
+      <el-row>
+        <el-col :span="16">
+          <!--           搜索框 -->
+          <el-input
+            v-model="tableData.searchContent"
+            placeholder="搜素内容"
+            class="grid-content handle-input mr10"
+          />
+
+          <!-- 搜索按钮 -->
+          <el-button type="primary" :icon="Search" @click="handleSearch"
+            >搜索
+          </el-button>
+          <!--添加按钮-->
+          <el-button type="primary" :icon="Search" @click="openAdd"
+            >添加
+          </el-button>
+        </el-col>
+      </el-row>
     </div>
-    <div class="container">
-      <div class="handle-box">
-        <el-select
-          v-model="query.address"
-          placeholder="地址"
-          class="handle-select mr10"
-        >
-          <el-option key="1" label="广东省" value="广东省"></el-option>
-          <el-option key="2" label="湖南省" value="湖南省"></el-option>
-        </el-select>
-        <el-input
-          v-model="query.name"
-          placeholder="用户名"
-          class="handle-input mr10"
-        ></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
-          >搜索</el-button
-        >
-      </div>
-      <el-table
-        :data="tableData"
-        border
-        class="table"
-        ref="multipleTable"
-        header-cell-class-name="table-header"
-        max-height="578"
+    <!--添加弹窗-->
+    <el-dialog
+      v-model="dialogVisible.isShowAdd"
+      title="添加信息"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <el-form
+        status-icon
+        label-width="6.25rem"
+        ref="formRef"
+        :model="tableData.addData"
       >
-        <el-table-column
-          prop="id"
-          label="ID"
-          width="55"
-          align="center"
-        ></el-table-column>
-        <el-table-column prop="name" label="用户名"></el-table-column>
-        <el-table-column label="账户余额">
-          <template #default="scope">￥{{ scope.row.money }}</template>
-        </el-table-column>
-        <el-table-column label="头像(查看大图)" align="center">
-          <template #default="scope">
-            <el-image
-              class="table-td-thumb"
-              :src="scope.row.thumb"
-              :preview-src-list="[scope.row.thumb]"
-            >
-            </el-image>
-          </template>
-        </el-table-column>
-        <el-table-column prop="address" label="地址"></el-table-column>
-        <el-table-column label="状态" align="center">
-          <template #default="scope">
-            <el-tag
-              :type="
-                scope.row.state === '成功'
-                  ? 'success'
-                  : scope.row.state === '失败'
-                  ? 'danger'
-                  : ''
-              "
-              >{{ scope.row.state }}</el-tag
-            >
-          </template>
-        </el-table-column>
-
-        <el-table-column prop="date" label="注册时间"></el-table-column>
-        <el-table-column label="操作" width="180" align="center">
-          <template #default="scope">
-            <el-button
-              type="text"
-              icon="el-icon-edit"
-              @click="handleEdit(scope.$index, scope.row)"
-            >
-              编辑
-            </el-button>
-            <el-button
-              type="text"
-              icon="el-icon-delete"
-              class="red"
-              @click="handleDelete(scope.$index, scope.row)"
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="pagination">
-        <el-pagination
-          background
-          layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
-          :page-size="query.pageSize"
-          :total="pageTotal"
-          @current-change="handlePageChange"
-        >
-        </el-pagination>
-      </div>
-    </div>
-
-    <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" v-model="editVisible" width="30%">
-      <el-form label-width="70px">
-        <el-form-item label="用户名">
-          <el-input v-model="form.name"></el-input>
+        <el-form-item label="员工号" prop="employee">
+          <el-input
+            v-model="tableData.addData.employee"
+            placeholder="请输入员工号"
+          />
         </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.address"></el-input>
+        <el-form-item label="用户名" prop="name">
+          <el-input
+            v-model="tableData.addData.name"
+            placeholder="请输入用户名"
+            maxlength="20"
+          />
+        </el-form-item>
+        <el-form-item label="手机号" prop="phone">
+          <el-input
+            v-model="tableData.addData.phone"
+            placeholder="请输入手机号"
+            maxlength="10"
+          />
+        </el-form-item>
+        <el-form-item label="是否有运输危险品运输资格证" prop="credit">
+          <el-input
+            v-model="tableData.addData.credit"
+            placeholder="是否有运输危险品运输资格证"
+            maxlength="10"
+          />
         </el-form-item>
       </el-form>
+
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="editVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveEdit">确 定</el-button>
+          <el-button @click="dialogVisible.isShowAdd = false">取消</el-button>
+          <el-button type="primary" @click="addData">确认</el-button>
         </span>
       </template>
     </el-dialog>
+    <!--编辑弹窗-->
+    <el-dialog
+      v-model="dialogVisible.isShowEdit"
+      title="编辑信息"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <el-form
+        status-icon
+        label-width="6.25rem"
+        ref="formRef"
+        :model="tableData.editData"
+      >
+        <el-form-item label="员工号" prop="employee">
+          <el-input
+            v-model="tableData.editData.employee"
+            placeholder="请输入员工号"
+          />
+        </el-form-item>
+        <el-form-item label="用户名" prop="name">
+          <el-input
+            v-model="tableData.editData.name"
+            placeholder="请输入用户名"
+            maxlength="20"
+          />
+        </el-form-item>
+        <el-form-item label="手机号" prop="phone">
+          <el-input
+            v-model="tableData.editData.phone"
+            placeholder="请输入手机号"
+            maxlength="10"
+          />
+        </el-form-item>
+        <el-form-item label="是否有运输危险品运输资格证" prop="credit">
+          <el-input
+            v-model="tableData.editData.credit"
+            placeholder="是否有运输危险品运输资格证"
+            maxlength="10"
+          />
+        </el-form-item>
+      </el-form>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible.isShowEdit = false">取消</el-button>
+          <el-button type="primary" @click="editData()">确认</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <!--数据展示-->
+    <el-table
+      :data="
+        tableData.tableData.slice(
+          (page.currentPage - 1) * page.pageSize,
+          page.currentPage * page.pageSize
+        )
+      "
+      border
+      style="width: 100%"
+    >
+      <el-table-column prop="employee" label="员工号" />
+      <el-table-column prop="name" label="姓名" />
+      <el-table-column prop="phone" label="电话" />
+      <el-table-column prop="credit" label="是否有运输危险品运输资格证" />
+      <el-table-column fixed="right" label="操作" width="150">
+        <template #default="scope">
+          <el-button
+            type="text"
+            size="small"
+            @click="openEdit(scope.$index, scope.row)"
+            >编辑
+          </el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="deleteData(scope.$index, scope.row)"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+    <div style="margin-top: 0.625rem; text-align: right">
+      <pagination
+        :page-size="page.pageSize"
+        :page-total="page.total"
+        :disabled="false"
+        @page-index="pageIndex"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ElMessage, ElMessageBox } from "element-plus";
+import { useGlobalStore } from "@/store/UserStore";
+import { Search } from "@element-plus/icons-vue";
+import Pagination from "@components/tables/Pagination.vue";
 
-const query = reactive({
-  address: "",
-  name: "",
-  pageIndex: 1,
+const store = useGlobalStore();
+
+const page = reactive({
+  currentPage: 1,
   pageSize: 10,
+  total: 0,
+  pageIndex: 1,
 });
-const tableData = ref([]);
-const pageTotal = ref(0);
-// 获取表格数据
-const getData = () => {
-  console.log(query);
-};
-getData();
+const dialogVisible = reactive({
+  isShowEdit: false,
+  isShowAdd: false,
+});
+// 引入接口
+const tableData = reactive({
+  tableData: [
+    {
+      employee: "",
+      name: "111",
+      phone: "111",
+      credit: "111",
+    },
+  ],
+  searchContent: "",
+  addData: {
+    employee: "",
+    name: "",
+    phone: "",
+    credit: "",
+  },
+  editData: {
+    employee: "",
+    name: "",
+    phone: "",
+    credit: "",
+  },
+});
 
-// 查询操作
+onMounted(() => {
+  console.log(store);
+});
+const openAdd = () => {
+  dialogVisible.isShowAdd = true;
+  tableData.addData = {
+    employee: "",
+    name: "",
+    phone: "",
+    credit: "",
+  };
+};
+
 const handleSearch = () => {
-  query.pageIndex = 1;
-  getData();
+  console.log(tableData.searchContent);
 };
-// 分页导航
-const handlePageChange = (val: any) => {
-  console.log(val);
-
-  query.pageIndex = val;
-  getData();
+const handleClose = () => {
+  dialogVisible.isShowAdd = false;
+  dialogVisible.isShowEdit = false;
 };
-
-// 删除操作
-const handleDelete = (index: any, scope: any) => {
-  console.log(index, scope);
-
-  // 二次确认删除
-  ElMessageBox.confirm("确定要删除吗？", "提示", {
-    type: "warning",
-  })
-    .then(() => {
-      ElMessage.success("删除成功");
-      tableData.value.splice(index, 1);
-    })
-    .catch(() => {
-      ElMessage.info("已取消删除");
-    });
+const addData = () => {
+  console.log("添加数据", tableData.addData);
 };
-
-// 表格编辑时弹窗和保存
-const editVisible = ref(false);
-let form = reactive({
-  name: "",
-  address: "",
-});
-let idx = -1;
-const handleEdit = (index: number, row: number) => {
-  idx = index;
-  Object.keys(form).forEach((item) => {
-    form[item] = row[item];
-  });
-  editVisible.value = true;
+const editData = () => {
+  console.log(tableData.editData);
+  // dialogVisible.isShowEdit = false;
 };
-const saveEdit = () => {
-  editVisible.value = false;
-  ElMessage.success(`修改第 ${idx + 1} 行成功`);
-  Object.keys(form).forEach((item) => {
-    tableData.value[idx][item] = form[item];
-  });
+const openEdit = (index: number, row: any) => {
+  dialogVisible.isShowEdit = true;
+  tableData.editData = row;
 };
+const deleteData = (index: number, row: any) => {
+  console.log("删除数据", row);
+};
+function pageIndex(res: number) {
+  page.currentPage = res;
+}
 </script>
 
 <style scoped>
-.handle-box {
-  margin-bottom: 20px;
-}
-
-.handle-select {
-  width: 120px;
-}
-
-.handle-input {
-  width: 300px;
-  display: inline-block;
-}
 .table {
   width: 100%;
-  font-size: 14px;
+  font-size: 0.875rem;
+  max-height: 36.125rem;
 }
+
 .red {
   color: #ff0000;
 }
-.mr10 {
-  margin-right: 10px;
-}
+
 .table-td-thumb {
   display: block;
   margin: auto;
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.handle-box {
+  margin-bottom: 1.25rem;
+}
+
+.handle-input {
+  width: 11.25rem;
+  display: inline-block;
+}
+
+.mr10 {
+  margin-right: 0.625rem;
+}
+
+.grid-content {
+  border-radius: 0.25rem;
+  min-height: 2.25rem;
+}
+
+.float-right {
+  float: right;
 }
 </style>

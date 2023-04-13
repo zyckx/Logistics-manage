@@ -92,8 +92,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: "公告管理",
         },
-        component: () =>
-          import("@components/Admin/Announcement/Announcement.vue"),
+        component: () => import("@components/Announcement/Announcement.vue"),
       },
       // 司机路由
       {
@@ -102,6 +101,25 @@ const routes: Array<RouteRecordRaw> = [
         meta: { title: "司机主页" },
         component: () => import("@views/Dashboard/Dashboard.vue"),
       },
+      
+      {
+        path: "/driver-task",
+        name: "任务查看",
+        meta: { title: "任务查看" },
+        component: () => import("@views/Driver/DriverTask.vue"),
+      },
+      {
+        path: "/driver-person",
+        name: "个人信息",
+        meta: { title: "个人信息" },
+        component: () => import("@views/Driver/DriverPerson.vue"),
+      },
+      {
+        path: "/driver-apply",
+        name: "申请",
+        meta: { title: "申请" },
+        component: () => import("@views/Driver/DriverApply.vue"),
+      },
       // 客户路由
       {
         path: "/customer",
@@ -109,6 +127,19 @@ const routes: Array<RouteRecordRaw> = [
         meta: { title: "客户主页" },
         component: () => import("@views/Dashboard/Dashboard.vue"),
       },
+      {
+        path: "/task-publish",
+        name: "任务发布",
+        meta: { title: "任务发布" },
+        component: () => import("@views/Customer/TaskPublish.vue"),
+      },
+      {
+        path: "/current-task",
+        name: "当前任务",
+        meta: { title: "当前任务" },
+        component: () => import("@views/Customer/CurrentTask.vue"),
+      },
+
       {
         path: "/404",
         name: "404",

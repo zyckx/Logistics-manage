@@ -48,7 +48,6 @@
 
 <script setup lang="ts">
 import { useGlobalStore } from "@/store/UserStore";
-import { ElMessage } from "element-plus";
 const router = useRouter();
 const route = useRoute();
 const param = reactive({

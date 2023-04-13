@@ -35,23 +35,30 @@
         ref="formRef"
         :model="tableData.addData"
       >
-        <el-form-item label="用户名" prop="userName">
+        <el-form-item label="员工号" prop="employee">
           <el-input
-            v-model="tableData.addData.userName"
-            placeholder="请输入用户名"
+            v-model="tableData.addData.employee"
+            placeholder="请输入员工号"
           />
         </el-form-item>
-        <el-form-item label="账户" prop="account">
+        <el-form-item label="用户名" prop="name">
           <el-input
-            v-model="tableData.addData.account"
-            placeholder="请输入账户"
+            v-model="tableData.addData.name"
+            placeholder="请输入用户名"
             maxlength="20"
           />
         </el-form-item>
-        <el-form-item label="密码" prop="password">
+        <el-form-item label="手机号" prop="phone">
           <el-input
-            v-model="tableData.addData.password"
-            placeholder="请输入密码"
+            v-model="tableData.addData.phone"
+            placeholder="请输入手机号"
+            maxlength="10"
+          />
+        </el-form-item>
+        <el-form-item label="是否有运输危险品运输资格证" prop="credit">
+          <el-input
+            v-model="tableData.addData.credit"
+            placeholder="是否有运输危险品运输资格证"
             maxlength="10"
           />
         </el-form-item>
@@ -77,16 +84,30 @@
         ref="formRef"
         :model="tableData.editData"
       >
-        <!--              <el-form-item label="用户名" prop="userName">-->
-        <!--                <el-input v-model="tableData.editData.userName" placeholder="请输入用户名"  />-->
-        <!--              </el-form-item>-->
-        <!--              <el-form-item label="账户" prop="account">-->
-        <!--                <el-input v-model="tableData.editData.account" placeholder="请输入账户" maxlength="20"  />-->
-        <!--              </el-form-item>-->
-        <el-form-item label="密码" prop="password">
+        <el-form-item label="员工号" prop="employee">
           <el-input
-            v-model="tableData.editData.password"
-            placeholder="请输入密码"
+            v-model="tableData.editData.employee"
+            placeholder="请输入员工号"
+          />
+        </el-form-item>
+        <el-form-item label="用户名" prop="name">
+          <el-input
+            v-model="tableData.editData.name"
+            placeholder="请输入用户名"
+            maxlength="20"
+          />
+        </el-form-item>
+        <el-form-item label="手机号" prop="phone">
+          <el-input
+            v-model="tableData.editData.phone"
+            placeholder="请输入手机号"
+            maxlength="10"
+          />
+        </el-form-item>
+        <el-form-item label="是否有运输危险品运输资格证" prop="credit">
+          <el-input
+            v-model="tableData.editData.credit"
+            placeholder="是否有运输危险品运输资格证"
             maxlength="10"
           />
         </el-form-item>
@@ -110,9 +131,10 @@
       border
       style="width: 100%"
     >
-      <el-table-column prop="userName" label="用户名" />
-      <el-table-column prop="account" label="账户" />
-      <el-table-column prop="password" label="密码" />
+      <el-table-column prop="employee" label="员工号" />
+      <el-table-column prop="name" label="姓名" />
+      <el-table-column prop="phone" label="电话" />
+      <el-table-column prop="credit" label="是否有运输危险品运输资格证" />
       <el-table-column fixed="right" label="操作" width="150">
         <template #default="scope">
           <el-button
@@ -162,22 +184,24 @@ const dialogVisible = reactive({
 const tableData = reactive({
   tableData: [
     {
-      userName: "admin",
-      account: "111",
-      password: "111",
-      right: "111",
+      employee: "",
+      name: "111",
+      phone: "111",
+      credit: "111",
     },
   ],
   searchContent: "",
   addData: {
-    userName: "",
-    account: "",
-    password: "",
+    employee: "",
+    name: "",
+    phone: "",
+    credit: "",
   },
   editData: {
-    userName: "",
-    account: "",
-    password: "",
+    employee: "",
+    name: "",
+    phone: "",
+    credit: "",
   },
 });
 
@@ -187,9 +211,10 @@ onMounted(() => {
 const openAdd = () => {
   dialogVisible.isShowAdd = true;
   tableData.addData = {
-    userName: "",
-    account: "",
-    password: "",
+    employee: "",
+    name: "",
+    phone: "",
+    credit: "",
   };
 };
 
