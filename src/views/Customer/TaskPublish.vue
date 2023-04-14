@@ -7,7 +7,7 @@
           <!--           搜索框 -->
           <el-input
             v-model="tableData.searchContent"
-            placeholder="搜素内容"
+            placeholder="搜素任务"
             class="grid-content handle-input mr10"
           />
 
@@ -17,7 +17,7 @@
           </el-button>
           <!--添加按钮-->
           <el-button type="primary" :icon="Search" @click="openAdd"
-            >添加
+            >发布任务
           </el-button>
         </el-col>
       </el-row>
@@ -35,30 +35,58 @@
         ref="formRef"
         :model="tableData.addData"
       >
-        <el-form-item label="员工号" prop="employee">
+        <el-form-item label="起点" prop="taskStart">
           <el-input
-            v-model="tableData.addData.employee"
-            placeholder="请输入员工号"
+            v-model="tableData.addData.taskStart"
+            placeholder="请输入起点"
           />
         </el-form-item>
-        <el-form-item label="用户名" prop="name">
+        <el-form-item label="终点" prop="taskEnd">
           <el-input
-            v-model="tableData.addData.name"
-            placeholder="请输入用户名"
+            v-model="tableData.addData.taskEnd"
+            placeholder="请输入终点"
             maxlength="20"
           />
         </el-form-item>
-        <el-form-item label="手机号" prop="phone">
+        <el-form-item label="货物名称" prop="taskName">
           <el-input
-            v-model="tableData.addData.phone"
-            placeholder="请输入手机号"
+            v-model="tableData.addData.taskName"
+            placeholder="请输入货物名称"
             maxlength="10"
           />
         </el-form-item>
-        <el-form-item label="是否有运输危险品运输资格证" prop="credit">
+        <el-form-item label="重量" prop="taskWeight">
           <el-input
-            v-model="tableData.addData.credit"
-            placeholder="是否有运输危险品运输资格证"
+            v-model="tableData.addData.taskWeight"
+            placeholder="请输入货物名称重量"
+            maxlength="10"
+          />
+        </el-form-item>
+        <el-form-item label="是否危险" prop="isRisk">
+          <el-input
+            v-model="tableData.addData.isRisk"
+            placeholder="是否危险"
+            maxlength="10"
+          />
+        </el-form-item>
+        <el-form-item label="客户姓名" prop="customerName">
+          <el-input
+            v-model="tableData.addData.customerName"
+            placeholder="请输入客户姓名"
+            maxlength="10"
+          />
+        </el-form-item>
+        <el-form-item label="客户电话" prop="customerPhone">
+          <el-input
+            v-model="tableData.addData.customerPhone"
+            placeholder="请输入客户电话"
+            maxlength="10"
+          />
+        </el-form-item>
+        <el-form-item label="运费" prop="freight">
+          <el-input
+            v-model="tableData.addData.freight"
+            placeholder="请输入运费"
             maxlength="10"
           />
         </el-form-item>
@@ -86,27 +114,27 @@
       >
         <el-form-item label="员工号" prop="employee">
           <el-input
-            v-model="tableData.editData.employee"
+            v-model="tableData.editData.taskStart"
             placeholder="请输入员工号"
           />
         </el-form-item>
         <el-form-item label="用户名" prop="name">
           <el-input
-            v-model="tableData.editData.name"
+            v-model="tableData.editData.taskStart"
             placeholder="请输入用户名"
             maxlength="20"
           />
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
           <el-input
-            v-model="tableData.editData.phone"
+            v-model="tableData.editData.taskStart"
             placeholder="请输入手机号"
             maxlength="10"
           />
         </el-form-item>
         <el-form-item label="是否有运输危险品运输资格证" prop="credit">
           <el-input
-            v-model="tableData.editData.credit"
+            v-model="tableData.editData.taskStart"
             placeholder="是否有运输危险品运输资格证"
             maxlength="10"
           />
@@ -135,7 +163,7 @@
       <el-table-column prop="taskEnd" label="终点" />
       <el-table-column prop="taskName" label="货物名称" />
       <el-table-column prop="taskWeight" label="重量" />
-      <el-table-column prop="isTask" label="是否危险" />
+      <el-table-column prop="isRisk" label="是否危险" />
       <el-table-column prop="customerName" label="客户名称" />
       <el-table-column prop="customerPhone" label="客户电话" />
       <el-table-column prop="freight" label="运费" />
@@ -192,7 +220,7 @@ const tableData = reactive({
       taskEnd: "",
       taskName: "",
       taskWeight: "",
-      isTask: "",
+      isRisk: "",
       customerName: "",
       customerPhone: "",
       freight: "",
@@ -200,16 +228,24 @@ const tableData = reactive({
   ],
   searchContent: "",
   addData: {
-    employee: "",
-    name: "",
-    phone: "",
-    credit: "",
+    taskStart: "",
+    taskEnd: "",
+    taskName: "",
+    taskWeight: "",
+    isRisk: "",
+    customerName: "",
+    customerPhone: "",
+    freight: "",
   },
   editData: {
-    employee: "",
-    name: "",
-    phone: "",
-    credit: "",
+    taskStart: "",
+    taskEnd: "",
+    taskName: "",
+    taskWeight: "",
+    isRisk: "",
+    customerName: "",
+    customerPhone: "",
+    freight: "",
   },
 });
 
@@ -219,10 +255,14 @@ onMounted(() => {
 const openAdd = () => {
   dialogVisible.isShowAdd = true;
   tableData.addData = {
-    employee: "",
-    name: "",
-    phone: "",
-    credit: "",
+    taskStart: "",
+    taskEnd: "",
+    taskName: "",
+    taskWeight: "",
+    isRisk: "",
+    customerName: "",
+    customerPhone: "",
+    freight: "",
   };
 };
 

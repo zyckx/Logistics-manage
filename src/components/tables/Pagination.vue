@@ -13,9 +13,7 @@
   </div>
 </template>
 
-<script setup>
-import { ref, toRefs } from "vue";
-
+<script setup lang="ts">
 const pageIndex = ref(1); // 当前页
 
 const props = defineProps({
@@ -35,7 +33,7 @@ const emit = defineEmits(["pageIndex"]);
 /**
  * 分页导航
  */
-function handlePageChange(val) {
+function handlePageChange(val: number) {
   pageIndex.value = val;
   emit("pageIndex", pageIndex.value);
 }

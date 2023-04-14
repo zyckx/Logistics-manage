@@ -113,7 +113,7 @@ const driverSiderbarList = [
 const customerSiderbarList = [
   {
     icon: "fa fa-home",
-    index: "/custom",
+    index: "/customer",
     title: "客户首页",
   },
   {
