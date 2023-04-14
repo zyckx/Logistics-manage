@@ -90,22 +90,22 @@ const adminSidebarList = [
 ];
 const driverSiderbarList = [
   {
-    icon: "el-icon-ali-home",
-    index: "/dashboard",
+    icon: "fa fa-home",
+    index: "/driver",
     title: "司机首页",
   },
   {
-    icon: "el-icon-ali-cascades",
+    icon: "fa fa-tasks",
     index: "/driver-task",
     title: "任务查看",
   },
   {
-    icon: "el-icon-ali-cascades",
+    icon: "fa fa-drivers-license",
     index: "/driver-person",
     title: "个人信息",
   },
   {
-    icon: "el-icon-ali-cascades",
+    icon: "fa fa-pencil",
     index: "/driver-apply",
     title: "申请",
   },

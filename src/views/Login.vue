@@ -9,6 +9,7 @@
         ref="login"
         label-width="0px"
         class="ms-content"
+        @keyup.enter.native="submitForm"
       >
         <el-radio-group v-model="param.userFlag" size="large">
           <el-radio-button label="1">管理</el-radio-button>

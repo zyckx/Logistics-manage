@@ -10,14 +10,13 @@
             placeholder="搜素内容"
             class="grid-content handle-input mr10"
           />
-
           <!-- 搜索按钮 -->
           <el-button type="primary" :icon="Search" @click="handleSearch"
             >搜索
           </el-button>
           <!--添加按钮-->
           <el-button type="primary" :icon="Search" @click="openAdd"
-            >添加
+            >创建申请
           </el-button>
         </el-col>
       </el-row>
