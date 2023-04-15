@@ -7,7 +7,7 @@
           <!--           搜索框 -->
           <el-input
             v-model="tableData.searchContent"
-            placeholder="搜素内容"
+            placeholder="搜索内容"
             class="grid-content handle-input mr10"
           />
 

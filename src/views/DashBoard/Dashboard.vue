@@ -7,13 +7,14 @@
         <el-card shadow="hover" class="mgb20" style="height: 252px">
           <div class="user-info">
             <img
-              src="../assets/img/img.jpg"
+              src="../../assets/userlogin01.svg"
               class="user-avator"
               alt="user-logo"
             />
             <div class="user-info-cont">
               <div class="user-info-name">{{ name }}</div>
-              <div>{{ role }}</div>
+              <div>当前身份：{{ props.UserInfo.roleName }}</div>
+              <div style="font-size: 20px">欢迎您使用物流公司运营管理系统</div>
             </div>
           </div>
           <div class="user-info-list">
@@ -26,133 +27,91 @@
         <el-card shadow="hover" style="height: 252px">
           <template #header>
             <div class="clearfix">
-              <span>其他信息</span>
+              <span>公告</span>
             </div>
           </template>
         </el-card>
       </el-col>
 
       <el-col :span="16">
-        <!-- 访问量、消息、数量 -->
-        <el-row :gutter="20" class="mgb20">
-          <el-col :span="8">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-1">
-                <el-icon class="grid-con-icon">
-                  <user-filled />
-                </el-icon>
-                <div class="grid-cont-right">
-                  <div class="grid-num">1234</div>
-                  <div>用户访问量</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="8">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-2">
-                <el-icon class="grid-con-icon">
-                  <message />
-                </el-icon>
-                <div class="grid-cont-right">
-                  <div class="grid-num">321</div>
-                  <div>系统消息</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="8">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-3">
-                <el-icon class="grid-con-icon">
-                  <goods />
-                </el-icon>
-                <div class="grid-cont-right">
-                  <div class="grid-num">5000</div>
-                  <div>数量</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-
         <!-- 待办 -->
         <el-card shadow="hover" style="height: 403px">
           <template #header>
-            <div class="clearfix">
-              <span>待办事项</span>
-              <el-button
-                style="float: right; padding: 3px 0"
-                type="text"
-                @click="showDialog = true"
-                >添加</el-button
-              >
-            </div>
+            <div class="clearfix"><span>正在运输任务</span></div>
           </template>
-
-          <el-table :show-header="false" :data="todoList" style="width: 100%">
-            <!-- 选择框 -->
-            <el-table-column width="40">
-              <template #default="scope">
-                <el-checkbox v-model="scope.row.status"></el-checkbox>
-              </template>
-            </el-table-column>
-
-            <!-- 待办内容 -->
-            <el-table-column>
-              <template #default="scope">
-                <div
-                  class="todo-item"
-                  :class="{ 'todo-item-del': scope.row.status }"
-                >
-                  {{ scope.row.title }}
-                </div>
-              </template>
-            </el-table-column>
-
-            <!-- 编辑待办(暂无) -->
-            <el-table-column width="60">
-              <template>
-                <el-icon size="20">
-                  <edit />
-                </el-icon>
-                <el-icon size="20">
-                  <delete />
-                </el-icon>
-              </template>
-            </el-table-column>
-          </el-table>
+          <template v-if="props.UserInfo.userFlag == '3'">
+            <!-- 用户运输任务展示 -->
+            <el-table
+              :data="props.UserInfo.taskList"
+              style="width: 100%; height: 100%"
+              border
+            >
+              <el-table-column prop="taskStart" label="起点" />
+              <el-table-column prop="taskEnd" label="终点" />
+              <el-table-column prop="taskName" label="货物名称" />
+              <el-table-column prop="taskWeight" label="重量" />
+              <el-table-column prop="isRisk" label="是否危险" />
+              <el-table-column prop="customerName" label="客户名称" />
+              <el-table-column prop="customerPhone" label="客户电话" />
+              <el-table-column prop="freight" label="运费" />
+              <el-table-column fixed="right" label="操作" width="150">
+                <template #default="scope">
+                  <el-button
+                    type="text"
+                    size="small"
+                    @click="openEdit(scope.$index, scope.row)"
+                    >查看详情</el-button
+                  >
+                </template>
+              </el-table-column>
+            </el-table>
+          </template>
+          <template v-else="props.UserInfo.userFlag == '2'">
+            <!-- 用户运输任务展示 -->
+            <el-table
+              :data="props.UserInfo.taskList"
+              style="width: 100%; height: 100%"
+              border
+            >
+              <el-table-column prop="taskStart" label="起点" />
+              <el-table-column prop="taskEnd" label="终点" />
+              <el-table-column prop="taskName" label="货物名称" />
+              <el-table-column prop="taskWeight" label="重量" />
+              <el-table-column prop="isRisk" label="是否危险" />
+              <el-table-column prop="customerName" label="客户名称" />
+              <el-table-column prop="customerPhone" label="客户电话" />
+              <el-table-column prop="freight" label="运费" />
+              <el-table-column fixed="right" label="操作" width="150">
+                <template #default="scope">
+                  <el-button
+                    type="text"
+                    size="small"
+                    @click="openEdit(scope.$index, scope.row)"
+                    >查看详情</el-button
+                  >
+                </template>
+              </el-table-column>
+            </el-table>
+          </template>
         </el-card>
       </el-col>
     </el-row>
-
-    <!-- 待办事项弹窗 -->
-    <el-dialog title="添加待办" v-model="showDialog" width="30%">
-      <el-form label-width="100px" autocomplete="on">
-        <el-form-item label="待办事项">
-          <el-input v-model="text" placeholder="请输入待办事项"></el-input>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="cancel">取 消</el-button>
-          <el-button type="primary" @click="add">添 加</el-button>
-        </span>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 const name = localStorage.getItem("ms_username");
-const role = name === "admin" ? "超级管理员" : "普通用户";
 const currentTime = ref("");
-const routes = useRoute();
 const router = useRouter();
+const props = defineProps({
+  UserInfo: {
+    type: Object,
+    default: () => {},
+  },
+});
 
 onMounted(() => {
-  console.log(routes.fullPath);
-  console.log(router.options.routes);
+  console.log(props.UserInfo);
 });
 // 当前登录时间
 onMounted(() => {
@@ -166,46 +125,14 @@ onMounted(() => {
     "日";
 });
 
-// 语言使用详情
-const languages = reactive([
-  { title: "Vue", percentage: 53.4, color: "#42b983" },
-  { title: "Python", percentage: 38.2, color: "#f1e05a" },
-  { title: "JavaScript", percentage: 6.3, color: "#409EFF" },
-  { title: "CSS", percentage: 1.7, color: "#f56c6c" },
-]);
-
-// 待办
-const showDialog = ref(false);
-const todoList = reactive([
-  { title: "重构前端代码", status: false },
-  { title: "添加所有表信息", status: false },
-  { title: "调整代码结构", status: true },
-  { title: "添加学生表信息", status: true },
-  { title: "添加教师表信息", status: true },
-]);
-
-// 添加待办
-const text = ref("");
-const add = () => {
-  todoList.pop();
-  todoList.unshift({ title: text.value, status: false });
-  showDialog.value = false;
-  text.value = "";
+const openEdit = (index: number, row: any) => {
+  router.push({
+    path: "/task-detail",
+    query: {
+      taskId: row.taskId,
+    },
+  });
 };
-
-// 取消
-const cancel = () => {
-  showDialog.value = false;
-  text.value = "";
-};
-
-// 默认开启,可不要
-defineExpose({
-  role,
-  languages,
-  add,
-  cancel,
-});
 </script>
 
 <style scoped>

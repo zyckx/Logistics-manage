@@ -9,7 +9,7 @@
         ref="login"
         label-width="0px"
         class="ms-content"
-        @keyup.enter.native="submitForm"
+        @keyup.enter="submitForm"
       >
         <el-radio-group v-model="param.userFlag" size="large">
           <el-radio-button label="1">管理</el-radio-button>
@@ -74,7 +74,7 @@ const submitForm = () => {
   console.log("yes");
   if (param.userFlag == "1") {
     router.push("/admin");
-    ElMessage.success("登录成功");
+    ElMessage.success("登陆成功");
   } else if (param.userFlag == "2") {
     router.push("/driver");
     ElMessage.success("登录成功");

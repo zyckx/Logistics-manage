@@ -7,7 +7,7 @@
           <!--           搜索框 -->
           <el-input
             v-model="tableData.searchContent"
-            placeholder="搜素任务"
+            placeholder="搜索任务"
             class="grid-content handle-input mr10"
           />
 
@@ -274,7 +274,7 @@ const handleClose = () => {
   dialogVisible.isShowEdit = false;
 };
 const addData = () => {
-  console.log("添加数据", tableData.addData);
+  tableData.tableData.push(tableData.addData);
 };
 const editData = () => {
   console.log(tableData.editData);

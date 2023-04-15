@@ -26,7 +26,23 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: "管理员管理",
         },
-        component: () => import("@views/Dashboard/Dashboard.vue"),
+        component: () => import("@views/DashBoard/DashBoard.vue"),
+      },
+      {
+        path: "/order-verify",
+        name: "order-verify",
+        meta: {
+          title: "订单审核",
+        },
+        component: () => import("@views/Admin/Order/OrderVerify.vue"),
+      },
+      {
+        path: "//order-allocate",
+        name: "/order-allocate",
+        meta: {
+          title: "订单分配",
+        },
+        component: () => import("@views/Admin/Order/OrderAllocate.vue"),
       },
       {
         path: "/drivers",
@@ -37,7 +53,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("../views/Admin/Driver/DriverManage.vue"),
       },
       {
-        path: "/driver-apply",
+        path: "/drivers-apply",
         name: "driver-apply",
         meta: {
           title: "司机申请",
@@ -50,7 +66,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: "司机详情",
         },
-        component: () => import("@views/Dashboard/Dashboard.vue"),
+        component: () => import("@views/DashBoard/DashBoard.vue"),
       },
       {
         path: "/announcement",
@@ -71,7 +87,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "/vehicle-view/:id",
         name: "admin-vehicle-view",
-        component: () => import("@views/Dashboard/Dashboard.vue"),
+        component: () => import("@views/DashBoard/DashBoard.vue"),
       },
       {
         path: "/transport-tasks",
@@ -99,9 +115,9 @@ const routes: Array<RouteRecordRaw> = [
         path: "/driver",
         name: "司机主页",
         meta: { title: "司机主页" },
-        component: () => import("@views/Dashboard/Dashboard.vue"),
+        component: () => import("@views/DashBoard/DashBoard.vue"),
       },
-      
+
       {
         path: "/driver-task",
         name: "任务查看",
@@ -125,13 +141,19 @@ const routes: Array<RouteRecordRaw> = [
         path: "/customer",
         name: "客户主页",
         meta: { title: "客户主页" },
-        component: () => import("@views/Dashboard/Dashboard.vue"),
+        component: () => import("@views/DashBoard/DashBoard.vue"),
       },
       {
         path: "/task-publish",
         name: "任务发布",
         meta: { title: "任务发布" },
         component: () => import("@views/Customer/TaskPublish.vue"),
+      },
+      {
+        path: "/task-detail/:id",
+        name: "任务详情",
+        meta: { title: "任务详情" },
+        component: () => import("@views/Customer/TaskDetail.vue"),
       },
       {
         path: "/current-task",

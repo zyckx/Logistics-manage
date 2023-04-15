@@ -7,7 +7,7 @@
           <!--           搜索框 -->
           <el-input
             v-model="tableData.searchContent"
-            placeholder="搜素内容"
+            placeholder="搜索内容"
             class="grid-content handle-input mr10"
           />
           <!-- 搜索按钮 -->
@@ -34,10 +34,10 @@
         ref="formRef"
         :model="tableData.addData"
       >
-        <el-form-item label="员工号" prop="employee">
+        <el-form-item label="申请类型" prop="employee">
           <el-input
-            v-model="tableData.addData.employee"
-            placeholder="请输入员工号"
+            v-model="tableData.addData.applyName"
+            placeholder="请输入申请类型"
           />
         </el-form-item>
         <el-form-item label="用户名" prop="name">
@@ -54,11 +54,16 @@
             maxlength="10"
           />
         </el-form-item>
-        <el-form-item label="是否有运输危险品运输资格证" prop="credit">
+        <el-form-item label="申请时间" prop="time">
           <el-input
-            v-model="tableData.addData.credit"
-            placeholder="是否有运输危险品运输资格证"
-            maxlength="10"
+            v-model="tableData.addData.time"
+            placeholder="请输入申请时间"
+          />
+        </el-form-item>
+        <el-form-item label="申请概述" prop="event">
+          <el-input
+            v-model="tableData.addData.event"
+            placeholder="请输入申请概述"
           />
         </el-form-item>
       </el-form>
@@ -83,31 +88,36 @@
         ref="formRef"
         :model="tableData.editData"
       >
-        <el-form-item label="员工号" prop="employee">
+        <el-form-item label="申请类型" prop="employee">
           <el-input
-            v-model="tableData.editData.employee"
-            placeholder="请输入员工号"
+            v-model="tableData.addData.applyName"
+            placeholder="请输入申请类型"
           />
         </el-form-item>
         <el-form-item label="用户名" prop="name">
           <el-input
-            v-model="tableData.editData.name"
+            v-model="tableData.addData.name"
             placeholder="请输入用户名"
             maxlength="20"
           />
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
           <el-input
-            v-model="tableData.editData.phone"
+            v-model="tableData.addData.phone"
             placeholder="请输入手机号"
             maxlength="10"
           />
         </el-form-item>
-        <el-form-item label="是否有运输危险品运输资格证" prop="credit">
+        <el-form-item label="申请时间" prop="time">
           <el-input
-            v-model="tableData.editData.credit"
-            placeholder="是否有运输危险品运输资格证"
-            maxlength="10"
+            v-model="tableData.addData.time"
+            placeholder="请输入申请时间"
+          />
+        </el-form-item>
+        <el-form-item label="申请概述" prop="event">
+          <el-input
+            v-model="tableData.addData.event"
+            placeholder="请输入申请概述"
           />
         </el-form-item>
       </el-form>
@@ -130,10 +140,11 @@
       border
       style="width: 100%"
     >
-      <el-table-column prop="employee" label="员工号" />
+      <el-table-column prop="applyName" label="申请" />
       <el-table-column prop="name" label="姓名" />
       <el-table-column prop="phone" label="电话" />
-      <el-table-column prop="credit" label="是否有运输危险品运输资格证" />
+      <el-table-column prop="time" label="申请时间" />
+      <el-table-column prop="event" label="申请事件" />
       <el-table-column fixed="right" label="操作" width="150">
         <template #default="scope">
           <el-button
@@ -146,7 +157,7 @@
             type="text"
             size="small"
             @click="deleteData(scope.$index, scope.row)"
-            >删除</el-button
+            >撤销</el-button
           >
         </template>
       </el-table-column>
@@ -183,24 +194,27 @@ const dialogVisible = reactive({
 const tableData = reactive({
   tableData: [
     {
-      employee: "",
+      applyName: "",
       name: "111",
       phone: "111",
-      credit: "111",
+      time: "111",
+      event: "111",
     },
   ],
   searchContent: "",
   addData: {
-    employee: "",
-    name: "",
-    phone: "",
-    credit: "",
+    applyName: "",
+    name: "111",
+    phone: "111",
+    time: "111",
+    event: "111",
   },
   editData: {
-    employee: "",
-    name: "",
-    phone: "",
-    credit: "",
+    applyName: "",
+    name: "111",
+    phone: "111",
+    time: "111",
+    event: "111",
   },
 });
 
@@ -210,10 +224,11 @@ onMounted(() => {
 const openAdd = () => {
   dialogVisible.isShowAdd = true;
   tableData.addData = {
-    employee: "",
-    name: "",
-    phone: "",
-    credit: "",
+    applyName: "",
+    name: "111",
+    phone: "111",
+    time: "111",
+    event: "111",
   };
 };
 

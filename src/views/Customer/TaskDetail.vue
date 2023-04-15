@@ -7,12 +7,17 @@
           <!--           搜索框 -->
           <el-input
             v-model="tableData.searchContent"
-            placeholder="搜索任务"
+            placeholder="搜索内容"
             class="grid-content handle-input mr10"
           />
+
           <!-- 搜索按钮 -->
           <el-button type="primary" :icon="Search" @click="handleSearch"
             >搜索
+          </el-button>
+          <!--添加按钮-->
+          <el-button type="primary" :icon="Search" @click="openAdd"
+            >添加
           </el-button>
         </el-col>
       </el-row>
@@ -28,22 +33,24 @@
       border
       style="width: 100%"
     >
-      <el-table-column prop="taskStart" label="起点" />
-      <el-table-column prop="taskEnd" label="终点" />
-      <el-table-column prop="taskName" label="货物名称" />
-      <el-table-column prop="taskWeight" label="重量" />
-      <el-table-column prop="isRisk" label="是否危险" />
-      <el-table-column prop="customerName" label="客户名称" />
-      <el-table-column prop="customerPhone" label="客户电话" />
-      <el-table-column prop="freight" label="运费" />
-      <el-table-column fixed="right" label="状态" width="150">
+      <el-table-column prop="employee" label="员工号" />
+      <el-table-column prop="name" label="姓名" />
+      <el-table-column prop="phone" label="电话" />
+      <el-table-column prop="credit" label="是否有运输危险品运输资格证" />
+      <el-table-column fixed="right" label="操作" width="150">
         <template #default="scope">
           <el-button
-            type="success"
+            type="text"
             size="small"
             @click="openEdit(scope.$index, scope.row)"
-            >运输中
+            >编辑
           </el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="deleteData(scope.$index, scope.row)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -79,40 +86,60 @@ const dialogVisible = reactive({
 const tableData = reactive({
   tableData: [
     {
-      taskStart: "",
-      taskEnd: "",
-      taskName: "",
-      taskWeight: "",
-      isRisk: "",
-      customerName: "",
-      customerPhone: "",
-      freight: "",
+      employee: "",
+      name: "111",
+      phone: "111",
+      credit: "111",
     },
   ],
   searchContent: "",
+  addData: {
+    employee: "",
+    name: "",
+    phone: "",
+    credit: "",
+  },
   editData: {
-    taskStart: "",
-    taskEnd: "",
-    taskName: "",
-    taskWeight: "",
-    isRisk: "",
-    customerName: "",
-    customerPhone: "",
-    freight: "",
+    employee: "",
+    name: "",
+    phone: "",
+    credit: "",
   },
 });
 
 onMounted(() => {
   console.log(store);
 });
+const openAdd = () => {
+  dialogVisible.isShowAdd = true;
+  tableData.addData = {
+    employee: "",
+    name: "",
+    phone: "",
+    credit: "",
+  };
+};
 
 const handleSearch = () => {
   console.log(tableData.searchContent);
 };
-
+const handleClose = () => {
+  dialogVisible.isShowAdd = false;
+  dialogVisible.isShowEdit = false;
+};
+const addData = () => {
+  console.log("添加数据", tableData.addData);
+};
+const editData = () => {
+  console.log(tableData.editData);
+  // dialogVisible.isShowEdit = false;
+};
 const openEdit = (index: number, row: any) => {
   dialogVisible.isShowEdit = true;
   tableData.editData = row;
+};
+const deleteData = (index: number, row: any) => {
+  console.log("删除数据", row);
 };
 function pageIndex(res: number) {
   page.currentPage = res;

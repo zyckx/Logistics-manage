@@ -7,9 +7,10 @@
           <!--           搜索框 -->
           <el-input
             v-model="tableData.searchContent"
-            placeholder="搜索任务"
+            placeholder="搜索订单"
             class="grid-content handle-input mr10"
           />
+
           <!-- 搜索按钮 -->
           <el-button type="primary" :icon="Search" @click="handleSearch"
             >搜索
@@ -17,6 +18,7 @@
         </el-col>
       </el-row>
     </div>
+
     <!--数据展示-->
     <el-table
       :data="
@@ -36,14 +38,20 @@
       <el-table-column prop="customerName" label="客户名称" />
       <el-table-column prop="customerPhone" label="客户电话" />
       <el-table-column prop="freight" label="运费" />
-      <el-table-column fixed="right" label="状态" width="150">
+      <el-table-column fixed="right" label="操作" width="150">
         <template #default="scope">
           <el-button
             type="success"
             size="small"
             @click="openEdit(scope.$index, scope.row)"
-            >运输中
+            >同意
           </el-button>
+          <el-button
+            type="danger"
+            size="small"
+            @click="deleteData(scope.$index, scope.row)"
+            >拒绝</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -71,10 +79,6 @@ const page = reactive({
   total: 0,
   pageIndex: 1,
 });
-const dialogVisible = reactive({
-  isShowEdit: false,
-  isShowAdd: false,
-});
 // 引入接口
 const tableData = reactive({
   tableData: [
@@ -90,16 +94,6 @@ const tableData = reactive({
     },
   ],
   searchContent: "",
-  editData: {
-    taskStart: "",
-    taskEnd: "",
-    taskName: "",
-    taskWeight: "",
-    isRisk: "",
-    customerName: "",
-    customerPhone: "",
-    freight: "",
-  },
 });
 
 onMounted(() => {
@@ -111,8 +105,10 @@ const handleSearch = () => {
 };
 
 const openEdit = (index: number, row: any) => {
-  dialogVisible.isShowEdit = true;
-  tableData.editData = row;
+  console.log("同意");
+};
+const deleteData = (index: number, row: any) => {
+  console.log("删除数据", row);
 };
 function pageIndex(res: number) {
   page.currentPage = res;

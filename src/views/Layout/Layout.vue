@@ -5,7 +5,7 @@
     <div class="content-box" :class="{ 'content-collapse': collapse }">
       <Tags />
       <div class="content">
-        <router-view v-slot="{ Component }">
+        <router-view v-slot="{ Component }" :UserInfo="UserInfo">
           <transition name="move" mode="out-in">
             <keep-alive :include="tagsList">
               <component :is="Component" />
@@ -39,6 +39,10 @@ const roleName = computed(() => {
       return "客户";
   }
 });
+const UserInfo = reactive({
+  roleName: roleName,
+  userFlag: store.userFlag,
+});
 const SidebarList = computed(() => {
   switch (store.userFlag) {
     case "1":
@@ -56,6 +60,21 @@ const adminSidebarList = [
     title: "管理员首页",
   },
   {
+    icon: "fa fa-tags",
+    index: "/order",
+    title: "订单",
+    subs: [
+      {
+        index: "/order-verify",
+        title: "订单审核",
+      },
+      {
+        index: "/order-allocate",
+        title: "订单分配",
+      },
+    ],
+  },
+  {
     icon: "fa fa-user",
     index: "/drivers",
     title: "司机管理",
@@ -67,7 +86,7 @@ const adminSidebarList = [
       },
       {
         icon: "fa fa-user",
-        index: "/driver-apply",
+        index: "/drivers-apply",
         title: "司机申请",
       },
       {
@@ -128,6 +147,10 @@ const customerSiderbarList = [
       {
         index: "/current-task",
         title: "当前任务",
+      },
+      {
+        index: "task-detail",
+        title: "任务详情",
       },
     ],
   },
