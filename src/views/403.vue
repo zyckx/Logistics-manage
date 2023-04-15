@@ -13,19 +13,11 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { useRouter } from "vue-router";
-export default {
-  name: "404",
-  setup() {
-    const router = useRouter();
-    const goBack = () => {
-      router.go(-1);
-    };
-    return {
-      goBack,
-    };
-  },
+const router = useRouter();
+const goBack = () => {
+  router.go(-1);
 };
 </script>
 
