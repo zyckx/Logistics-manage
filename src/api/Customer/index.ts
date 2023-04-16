@@ -4,31 +4,31 @@ export const getCurrentTask=()=>{
     return http.get("/custom/ViewIng")
 }
 //获取发布的任务
-export const getTaskList=(params:any)=>{
-    return http.get("/acustom/ViewList",params)
+export const getTaskList=()=>{
+    return http.get("/custom/ViewList")
 }
 // 客户登录
-export const customerLogin=(params:any)=>{
-    return http.post("/custom/customlogin",params)
+export const customerLogin=(formData:any)=>{
+    return http.post("/custom/customlogin",formData)
 }
 // 客户登出
-export const customerLogout=(params:any)=>{
-    return http.post("/custom/customlogout",params)
+export const customerLogout=(formData:any)=>{
+    return http.post("/custom/customlogout",formData)
 }
 // 获取个人信息
 export const getPersonInfo=()=>{
     return http.get("/custom/information")
 }
 // 发布任务
-export const publishTask=(params:any)=>{
-    return http.post("/custom/publicmission",params)
+export const publishTask=(formData:any)=>{
+    return http.post("/custom/publicmission",formData)
 }
 
 // 客户注册
-export const customerRegister=(params:any)=>{
-    return http.post("/custom/register",params)
+export const customerRegister=(formData:any)=>{
+    return http.post("/custom/register",formData)
 }
 // 获取任务详情
-export const getTaskDetail=(params:any)=>{
-    return http.get("/custom/ViewDetail",params)
+export const getTaskDetail=(formData:any)=>{
+    return http.get("/custom/ViewDetail",formData)
 }

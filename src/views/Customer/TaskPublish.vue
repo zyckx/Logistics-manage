@@ -35,57 +35,44 @@
         ref="formRef"
         :model="tableData.addData"
       >
-        <el-form-item label="起点" prop="taskStart">
+        <el-form-item label="起点" prop="start">
           <el-input
-            v-model="tableData.addData.taskStart"
+            v-model="tableData.addData.start"
             placeholder="请输入起点"
           />
         </el-form-item>
-        <el-form-item label="终点" prop="taskEnd">
+        <el-form-item label="终点" prop="end">
           <el-input
-            v-model="tableData.addData.taskEnd"
+            v-model="tableData.addData.end"
             placeholder="请输入终点"
             maxlength="20"
           />
         </el-form-item>
-        <el-form-item label="货物名称" prop="taskName">
+        <el-form-item label="货物名称" prop="name">
           <el-input
-            v-model="tableData.addData.taskName"
+            v-model="tableData.addData.name"
             placeholder="请输入货物名称"
             maxlength="10"
           />
         </el-form-item>
-        <el-form-item label="重量" prop="taskWeight">
+        <el-form-item label="重量" prop="weight">
           <el-input
-            v-model="tableData.addData.taskWeight"
+            v-model.number="tableData.addData.weight"
             placeholder="请输入货物名称重量"
             maxlength="10"
           />
         </el-form-item>
-        <el-form-item label="是否危险" prop="isRisk">
+        <el-form-item label="是否危险" prop="isDanger">
           <el-input
-            v-model="tableData.addData.isRisk"
+            v-model.number="tableData.addData.isDanger"
             placeholder="是否危险"
             maxlength="10"
           />
         </el-form-item>
-        <el-form-item label="客户姓名" prop="customerName">
+
+        <el-form-item label="运费" prop="fee">
           <el-input
-            v-model="tableData.addData.customerName"
-            placeholder="请输入客户姓名"
-            maxlength="10"
-          />
-        </el-form-item>
-        <el-form-item label="客户电话" prop="customerPhone">
-          <el-input
-            v-model="tableData.addData.customerPhone"
-            placeholder="请输入客户电话"
-            maxlength="10"
-          />
-        </el-form-item>
-        <el-form-item label="运费" prop="freight">
-          <el-input
-            v-model="tableData.addData.freight"
+            v-model.number="tableData.addData.fee"
             placeholder="请输入运费"
             maxlength="10"
           />
@@ -114,27 +101,27 @@
       >
         <el-form-item label="员工号" prop="employee">
           <el-input
-            v-model="tableData.editData.taskStart"
+            v-model="tableData.editData.start"
             placeholder="请输入员工号"
           />
         </el-form-item>
         <el-form-item label="用户名" prop="name">
           <el-input
-            v-model="tableData.editData.taskStart"
+            v-model="tableData.editData.start"
             placeholder="请输入用户名"
             maxlength="20"
           />
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
           <el-input
-            v-model="tableData.editData.taskStart"
+            v-model="tableData.editData.start"
             placeholder="请输入手机号"
             maxlength="10"
           />
         </el-form-item>
         <el-form-item label="是否有运输危险品运输资格证" prop="credit">
           <el-input
-            v-model="tableData.editData.taskStart"
+            v-model="tableData.editData.start"
             placeholder="是否有运输危险品运输资格证"
             maxlength="10"
           />
@@ -159,14 +146,18 @@
       border
       style="width: 100%"
     >
-      <el-table-column prop="taskStart" label="起点" />
-      <el-table-column prop="taskEnd" label="终点" />
-      <el-table-column prop="taskName" label="货物名称" />
-      <el-table-column prop="taskWeight" label="重量" />
-      <el-table-column prop="isRisk" label="是否危险" />
-      <el-table-column prop="customerName" label="客户名称" />
-      <el-table-column prop="customerPhone" label="客户电话" />
-      <el-table-column prop="freight" label="运费" />
+      <el-table-column prop="start" label="起点" />
+      <el-table-column prop="end" label="终点" />
+      <el-table-column prop="name" label="货物名称" />
+      <el-table-column prop="weight" label="重量" />
+      <el-table-column prop="isDanger" label="是否危险" />
+      <el-table-column prop="customId" label="客户ID" />
+      <el-table-column prop="driverId" label="司机ID" />
+      <el-table-column prop="carId" label="车辆ID" />
+      <el-table-column prop="situation" label="地点" />
+      <el-table-column prop="flag" label="状态" />
+      <el-table-column prop="isDeleted" label="是否取消" />
+      <el-table-column prop="fee" label="运费" />
       <el-table-column fixed="right" label="操作" width="150">
         <template #default="scope">
           <el-button
@@ -199,6 +190,7 @@
 import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
+import { publishTask, getTaskList } from "@/api/Customer";
 
 const store = useGlobalStore();
 
@@ -212,57 +204,85 @@ const dialogVisible = reactive({
   isShowEdit: false,
   isShowAdd: false,
 });
+// "id": 3,
+//             "createTime": "2023-04-16T14:45:18.000+0000",
+//             "updateTime": "2023-04-16T14:45:18.000+0000",
+//             "start": "我是默认字符串",
+//             "end": "我是默认字符串",
+//             "name": "我是默认字符串",
+//             "weight": 885,
+//             "isDanger": 11,
+//             "customId": 2,
+//             "fee": 169,
+//             "isDeleted": 0,
+//             "flag": null,
+//             "situation": null,
+//             "driverId": null,
+//             "carId": null
 // 引入接口
 const tableData = reactive({
   tableData: [
     {
-      taskStart: "",
-      taskEnd: "",
-      taskName: "",
-      taskWeight: "",
-      isRisk: "",
-      customerName: "",
-      customerPhone: "",
-      freight: "",
+      start: "",
+      end: "",
+      name: "",
+      weight: 0,
+      isDanger: 0,
+      fee: 0,
+      customId: "",
+      isDeleted: 0,
+      flag: "",
+      situation: "",
+      driverId: "",
+      carId: "",
     },
   ],
   searchContent: "",
   addData: {
-    taskStart: "",
-    taskEnd: "",
-    taskName: "",
-    taskWeight: "",
-    isRisk: "",
-    customerName: "",
-    customerPhone: "",
-    freight: "",
+    start: "",
+    end: "",
+    name: "",
+    weight: 0,
+    isDanger: 0,
+    fee: 0,
   },
   editData: {
-    taskStart: "",
-    taskEnd: "",
-    taskName: "",
-    taskWeight: "",
-    isRisk: "",
-    customerName: "",
-    customerPhone: "",
-    freight: "",
+    start: "",
+    end: "",
+    name: "",
+    weight: 0,
+    isDanger: 0,
+    fee: 0,
   },
 });
 
+/* "end": "我是默认字符串",
+    "fee": 169,
+    "isDanger": 11,
+    "name": "我是默认字符串",
+    "start": "我是默认字符串",
+    "weight": 885 */
 onMounted(() => {
-  console.log(store);
+  getTaskList().then((res) => {
+    if (res.code === 200) {
+      tableData.tableData = res.data;
+      console.log(res);
+
+      page.total = res.data.length;
+    } else {
+      ElMessage.error(res.msg);
+    }
+  });
 });
 const openAdd = () => {
   dialogVisible.isShowAdd = true;
   tableData.addData = {
-    taskStart: "",
-    taskEnd: "",
-    taskName: "",
-    taskWeight: "",
-    isRisk: "",
-    customerName: "",
-    customerPhone: "",
-    freight: "",
+    start: "",
+    end: "",
+    name: "",
+    weight: 0,
+    isDanger: 0,
+    fee: 0,
   };
 };
 
@@ -274,7 +294,13 @@ const handleClose = () => {
   dialogVisible.isShowEdit = false;
 };
 const addData = () => {
-  tableData.tableData.push(tableData.addData);
+  publishTask(JSON.stringify(tableData.addData)).then((res) => {
+    if (res.code === 200) {
+      ElMessage.success("添加成功");
+    } else {
+      ElMessage.error(res.msg);
+    }
+  });
 };
 const editData = () => {
   console.log(tableData.editData);

@@ -37,7 +37,7 @@ export default defineConfig({
     proxy: {
       "/api": {
         // target: "http://localhost:8088/api",
-        target: "http://116.62.145.202:8088/api",
+        target: "http://43.142.140.20:9000",
         changeOrigin: true, //是否跨域
         rewrite: (path) => path.replace(/^\/api/, ""),
       },

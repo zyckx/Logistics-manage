@@ -26,7 +26,7 @@ export const updateTaskStatus = (params: any) => {
   return http.post("/driver/UpdateStatus", params);
 }
 // 获取司机公告
-export const getNotice = () => {
+export const getDriverNotice = () => {
   return http.get("/driver/ViewNotice");
 }
 // 获取所有公告

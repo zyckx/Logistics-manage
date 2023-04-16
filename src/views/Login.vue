@@ -4,21 +4,21 @@
       <div class="ms-title">欢迎使用物流公司运营管理系统</div>
 
       <el-form
-        :model="param"
+        :model="Form.loginForm"
         :rules="rules"
         ref="login"
         label-width="0px"
         class="ms-content"
         @keyup.enter="submitForm"
       >
-        <el-radio-group v-model="param.userFlag" size="large">
+        <el-radio-group v-model="Form.userFlag" size="large">
           <el-radio-button label="1">管理</el-radio-button>
           <el-radio-button label="2">司机</el-radio-button>
           <el-radio-button label="3">用户</el-radio-button>
         </el-radio-group>
         <div style="height: 20px"></div>
-        <el-form-item prop="username">
-          <el-input v-model="param.username" placeholder="username">
+        <el-form-item prop="account">
+          <el-input v-model="Form.loginForm.account" placeholder="account">
             <template #prepend>
               <el-icon :size="20">
                 <Edit />
@@ -30,7 +30,7 @@
           <el-input
             type="password"
             placeholder="password"
-            v-model="param.password"
+            v-model="Form.loginForm.password"
           >
             <template #prepend>
               <el-icon :size="20">
@@ -49,11 +49,21 @@
 
 <script setup lang="ts">
 import { useGlobalStore } from "@/store/UserStore";
+import { customerLogin } from "@/api/Customer/index";
+import { driverLogin } from "@/api/Driver/index";
+import { adminLogin } from "@/api/Admin/index";
 const router = useRouter();
 const route = useRoute();
-const param = reactive({
-  username: null,
-  password: null,
+const Form = reactive({
+  loginForm: {
+    account: "",
+    password: "",
+  },
+  registerForm: {
+    account: "",
+    password: "",
+    password2: "",
+  },
   userFlag: "1",
   userId: "test",
   userName: "test",
@@ -68,19 +78,40 @@ const login = ref(null);
 // 状态管理
 const store = useGlobalStore();
 const submitForm = () => {
-  store.setUserFlag(param.userFlag);
-  store.setUserId(param.userId);
+  store.setUserFlag(Form.userFlag);
+  store.setUserId(Form.userId);
   // localStorage.setItem("token","true");
   console.log("yes");
-  if (param.userFlag == "1") {
-    router.push("/admin");
-    ElMessage.success("登陆成功");
-  } else if (param.userFlag == "2") {
-    router.push("/driver");
-    ElMessage.success("登录成功");
-  } else if (param.userFlag == "3") {
-    router.push("/customer");
-    ElMessage.success("登录成功");
+  if (Form.userFlag == "1") {
+    adminLogin(Form.loginForm).then((res) => {
+      console.log(res);
+      if (res.code == 200) {
+        ElMessage.success("登录成功");
+        router.push("/admin");
+      } else {
+        ElMessage.error("登录失败,请检查账号密码");
+      }
+    });
+  } else if (Form.userFlag == "2") {
+    driverLogin(Form.loginForm).then((res) => {
+      console.log(res);
+      if (res.code == 200) {
+        ElMessage.success("登录成功");
+        router.push("/driver");
+      } else {
+        ElMessage.error("登录失败,请检查账号密码");
+      }
+    });
+  } else if (Form.userFlag == "3") {
+    customerLogin(Form.loginForm).then((res) => {
+      console.log(res);
+      if (res.code == 200) {
+        ElMessage.success("登录成功");
+        router.push("/customer");
+      } else {
+        ElMessage.error("登录失败,请检查账号密码");
+      }
+    });
   }
 };
 

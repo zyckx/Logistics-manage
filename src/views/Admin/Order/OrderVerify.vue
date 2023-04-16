@@ -30,14 +30,14 @@
       border
       style="width: 100%"
     >
-      <el-table-column prop="taskStart" label="起点" />
-      <el-table-column prop="taskEnd" label="终点" />
-      <el-table-column prop="taskName" label="货物名称" />
-      <el-table-column prop="taskWeight" label="重量" />
-      <el-table-column prop="isRisk" label="是否危险" />
+      <el-table-column prop="start" label="起点" />
+      <el-table-column prop="end" label="终点" />
+      <el-table-column prop="name" label="货物名称" />
+      <el-table-column prop="weight" label="重量" />
+      <el-table-column prop="isDanger" label="是否危险" />
       <el-table-column prop="customerName" label="客户名称" />
       <el-table-column prop="customerPhone" label="客户电话" />
-      <el-table-column prop="freight" label="运费" />
+      <el-table-column prop="fee" label="运费" />
       <el-table-column fixed="right" label="操作" width="150">
         <template #default="scope">
           <el-button
@@ -83,14 +83,13 @@ const page = reactive({
 const tableData = reactive({
   tableData: [
     {
-      taskStart: "",
-      taskEnd: "",
-      taskName: "",
-      taskWeight: "",
-      isRisk: "",
-      customerName: "",
-      customerPhone: "",
-      freight: "",
+      start: "",
+      end: "",
+      name: "",
+      weight: "",
+      isDanger: "",
+
+      fee: "",
     },
   ],
   searchContent: "",
