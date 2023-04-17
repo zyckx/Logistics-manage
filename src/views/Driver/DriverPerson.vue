@@ -31,8 +31,8 @@
         ></el-table-column>
         <el-table-column prop="credit" label="操作" width="180">
           <template #default="{ row }">
-            <el-button type="text" @click="handleEdit(row)"> 编辑 </el-button>
-            <el-button type="text" @click="handleDelete(row)"> 删除 </el-button>
+            <el-button @click="handleEdit(row)"> 编辑 </el-button>
+            <el-button @click="handleDelete(row)"> 删除 </el-button>
           </template>
         </el-table-column>
       </el-table>

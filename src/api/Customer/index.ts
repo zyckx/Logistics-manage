@@ -28,7 +28,3 @@ export const publishTask=(formData:any)=>{
 export const customerRegister=(formData:any)=>{
     return http.post("/custom/register",formData)
 }
-// 获取任务详情
-export const getTaskDetail=(formData:any)=>{
-    return http.get("/custom/ViewDetail",formData)
-}

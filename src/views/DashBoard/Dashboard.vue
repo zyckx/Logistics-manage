@@ -12,8 +12,8 @@
               alt="user-logo"
             />
             <div class="user-info-cont">
-              <div class="user-info-name">{{ }}</div>
-              <div>当前身份：{{ props.UserInfo.roleName }}</div>
+              <div class="user-info-name">{{}}</div>
+              <div>当前身份：{{ UserInfo.roleName }}</div>
               <div style="font-size: 20px">欢迎您使用物流公司运营管理系统</div>
             </div>
           </div>
@@ -37,44 +37,45 @@
         <!-- 待办 -->
         <el-card shadow="hover" style="height: 403px">
           <template #header>
-            <div class="clearfix"><span>正在运输任务</span></div>
+            <div class="clearfix"><span>个人信息</span></div>
           </template>
-          <template v-if="props.UserInfo.userFlag == '3'">
+          <template v-if="store.userFlag == '3'">
             <!-- 用户运输任务展示 -->
-            <el-table :data="taskList" style="width: 100%; height: 100%" border>
-              <el-table-column prop="start" label="起点" />
-              <el-table-column prop="end" label="终点" />
-              <el-table-column prop="name" label="货物名称" />
-              <el-table-column prop="weight" label="重量" />
-              <el-table-column prop="isDanger" label="是否危险" />
-              <el-table-column prop="customId" label="客户ID" />
-              <el-table-column prop="driverId" label="司机ID" />
-              <el-table-column prop="carId" label="车辆ID" />
-              <el-table-column prop="situation" label="地点" />
-              <el-table-column prop="flag" label="状态" />
-              <el-table-column prop="isDeleted" label="是否取消" />
-              <el-table-column prop="fee" label="运费" />
-            </el-table>
-          </template>
-          <template v-else="props.UserInfo.userFlag == '2'">
-            <!-- 用户运输任务展示 -->
+            <!-- "id": 3, 
+        "createTime": "2023-04-17T05:12:06.000+0000", 
+        "updateTime": "2023-04-17T05:12:06.000+0000", 
+        "name": "zy", 
+        "phoneNum": "15133807162", 
+        "password": "794274c59b02039a17ee3d1c20910488", 
+        "account": "test" -->
             <el-table
-              :data="props.UserInfo.taskList"
+              :data="UserInfo.tableData"
               style="width: 100%; height: 100%"
               border
             >
-              <el-table-column prop="start" label="起点" />
-              <el-table-column prop="end" label="终点" />
-              <el-table-column prop="name" label="货物名称" />
-              <el-table-column prop="weight" label="重量" />
-              <el-table-column prop="isDanger" label="是否危险" />
-              <el-table-column prop="customId" label="客户ID" />
-              <el-table-column prop="driverId" label="司机ID" />
-              <el-table-column prop="carId" label="车辆ID" />
-              <el-table-column prop="situation" label="地点" />
-              <el-table-column prop="flag" label="状态" />
-              <el-table-column prop="isDeleted" label="是否取消" />
-              <el-table-column prop="fee" label="运费" />
+              <el-table-column prop="id" label="用户id" />
+              <el-table-column prop="account" label="账号" />
+              <el-table-column prop="name" label="姓名" />
+              <el-table-column prop="phoneNum" label="联系方式" />
+            </el-table>
+          </template>
+          <template v-else="store.userFlag == '2'">
+            <!-- 用户运输任务展示 -->
+            <el-table
+              :data="UserInfo.tableData"
+              style="width: 100%; height: 100%"
+              border
+            >
+              <el-table-column prop="id" label="用户id" />
+              <el-table-column prop="numid" label="账号" />
+              <el-table-column prop="name" label="姓名" />
+              <el-table-column prop="phoneNum" label="联系方式" />
+              <el-table-column prop="hasDanger" label="资格证">
+                <template #default="{ row }">
+                  <el-tag v-if="row.hasDanger == 1" type="success">有</el-tag>
+                  <el-tag v-else type="danger">无</el-tag>
+                </template>
+              </el-table-column>
             </el-table>
           </template>
         </el-card>
@@ -85,21 +86,73 @@
 
 <script setup lang="ts">
 import { useGlobalStore } from "@/store/UserStore";
-import { getCurrentTask } from "@/api/Customer";
+import { getCurrentTask, getPersonInfo } from "@/api/Customer";
+import { getAllNotice } from "@/api/Driver";
+import { getInfo } from "@/api/Driver";
 const store = useGlobalStore();
 const currentTime = ref("");
 const router = useRouter();
-const props = defineProps({
-  UserInfo: {
-    type: Object,
-    default: () => {},
-  },
+const UserInfo = reactive({
+  roleName: "",
+  tableData: [
+    {
+      id: 5,
+      createTime: "2023-04-16T15:50:26.000+0000",
+      updateTime: "2023-04-16T15:50:26.000+0000",
+      numid: "15",
+      name: "我是默认字符串",
+      phoneNum: "2",
+      hasDanger: 8,
+      password: "ac632e568953aa62a40737422bafee68",
+      isDelete: 0,
+      isUsed: 0,
+    },
+  ],
 });
+const notice = reactive({
+  id: 2,
+  createTime: "2023-04-16T13:22:30.000+0000",
+  updateTime: "2023-04-16T13:22:30.000+0000",
+  title: "我是默认字符串",
+  content: "我是默认字符串",
+  isDeleted: 0,
+});
+const getNotice = () => {
+  getAllNotice().then((res) => {
+    notice.id = res.data.id;
+    notice.createTime = res.data.createTime;
+    notice.updateTime = res.data.updateTime;
+    notice.title = res.data.title;
+    notice.content = res.data.content;
+    notice.isDeleted = res.data.isDeleted;
+  });
+};
+const getUserInfo = () => {
+  switch (store.userFlag) {
+    case "1":
+      UserInfo.roleName = "管理员";
+      break;
+    case "2":
+      getInfo().then((res) => {
+        UserInfo.tableData = res.data;
+      });
+      getNotice();
+      UserInfo.roleName = "司机";
+      break;
+    case "3":
+      getPersonInfo().then((res) => {
+        UserInfo.tableData = res.data;
+      });
+      UserInfo.roleName = "客户";
+      break;
+  }
+};
 const taskList = ref([]);
 onMounted(() => {
   getCurrentTask().then((res) => {
     taskList.value = res.data;
   });
+  getUserInfo();
 });
 // 当前登录时间
 onMounted(() => {

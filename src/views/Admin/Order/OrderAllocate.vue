@@ -29,56 +29,6 @@
       width="30%"
       :before-close="handleClose"
     >
-      <el-form
-        status-icon
-        label-width="6.25rem"
-        ref="formRef"
-        :model="tableData.addData"
-      >
-        <el-form-item label="起点" prop="start">
-          <el-input
-            v-model="tableData.addData.start"
-            placeholder="请输入起点"
-          />
-        </el-form-item>
-        <el-form-item label="终点" prop="end">
-          <el-input
-            v-model="tableData.addData.end"
-            placeholder="请输入终点"
-            maxlength="20"
-          />
-        </el-form-item>
-        <el-form-item label="货物名称" prop="name">
-          <el-input
-            v-model="tableData.addData.name"
-            placeholder="请输入货物名称"
-            maxlength="10"
-          />
-        </el-form-item>
-        <el-form-item label="重量" prop="weight">
-          <el-input
-            v-model="tableData.addData.weight"
-            placeholder="请输入货物名称重量"
-            maxlength="10"
-          />
-        </el-form-item>
-        <el-form-item label="是否危险" prop="isDanger">
-          <el-input
-            v-model="tableData.addData.isDanger"
-            placeholder="是否危险"
-            maxlength="10"
-          />
-        </el-form-item>
-
-        <el-form-item label="运费" prop="fee">
-          <el-input
-            v-model="tableData.addData.fee"
-            placeholder="请输入运费"
-            maxlength="10"
-          />
-        </el-form-item>
-      </el-form>
-
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible.isShowAdd = false">取消</el-button>
@@ -89,44 +39,18 @@
     <!--编辑弹窗-->
     <el-dialog
       v-model="dialogVisible.isShowEdit"
-      title="编辑信息"
+      title="分配司机"
       width="30%"
       :before-close="handleClose"
     >
-      <el-form
-        status-icon
-        label-width="6.25rem"
-        ref="formRef"
-        :model="tableData.editData"
-      >
-        <el-form-item label="员工号" prop="employee">
-          <el-input
-            v-model="tableData.editData.start"
-            placeholder="请输入员工号"
-          />
-        </el-form-item>
-        <el-form-item label="用户名" prop="name">
-          <el-input
-            v-model="tableData.editData.start"
-            placeholder="请输入用户名"
-            maxlength="20"
-          />
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input
-            v-model="tableData.editData.start"
-            placeholder="请输入手机号"
-            maxlength="10"
-          />
-        </el-form-item>
-        <el-form-item label="是否有运输危险品运输资格证" prop="credit">
-          <el-input
-            v-model="tableData.editData.start"
-            placeholder="是否有运输危险品运输资格证"
-            maxlength="10"
-          />
-        </el-form-item>
-      </el-form>
+      <!-- <el-select v-model="value" class="m-2" placeholder="Select" size="large">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select> -->
 
       <template #footer>
         <span class="dialog-footer">
@@ -146,29 +70,46 @@
       border
       style="width: 100%"
     >
+      <el-table-column type="index" label="序号" width="50" />
       <el-table-column prop="start" label="起点" />
       <el-table-column prop="end" label="终点" />
       <el-table-column prop="name" label="货物名称" />
       <el-table-column prop="weight" label="重量" />
-      <el-table-column prop="isDanger" label="是否危险" />
-      <el-table-column prop="customerName" label="客户名称" />
-      <el-table-column prop="customerPhone" label="客户电话" />
-      <el-table-column prop="fee" label="运费" />
-      <el-table-column fixed="right" label="分配司机" width="150">
+      <el-table-column prop="isDanger" label="是否危险">
         <template #default="scope">
-          <el-button
-            type="danger"
-            size="small"
-            @click="openEdit(scope.$index, scope.row)"
-            >编辑
-          </el-button>
+          <el-tag v-if="scope.row.isDanger == 1" type="success">是</el-tag>
+          <el-tag v-else type="danger">否</el-tag>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="分配车辆" width="150">
+      <el-table-column prop="customId" label="客户ID" />
+
+      <el-table-column prop="isDeleted" label="是否删除">
         <template #default="scope">
-          <el-button type="danger" size="small" @click="openAdd()"
-            >分配</el-button
+          <el-tag v-if="scope.row.isDeleted == 1" type="success">是</el-tag>
+          <el-tag v-else type="danger">否</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="fee" label="运费" />
+      <el-table-column prop="driverId" label="司机">
+        <template #default="scope">
+          <el-tag
+            v-if="scope.row.driverId == 0 || scope.row.driverId == null"
+            type="success"
+            @click="openEdit(scope.row)"
+            >未分配</el-tag
           >
+          <el-tag v-else type="danger">已分配</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="carId" label="车辆">
+        <template #default="scope">
+          <el-tag
+            v-if="scope.row.carId == null || scope.row.carId == 0"
+            type="success"
+            @click="openAdd(scope.row)"
+            >未分配</el-tag
+          >
+          <el-tag v-else type="danger">已分配</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -187,7 +128,7 @@
 import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
-
+import { getUnallocated } from "@/api/Admin";
 const store = useGlobalStore();
 
 const page = reactive({
@@ -201,6 +142,21 @@ const dialogVisible = reactive({
   isShowAdd: false,
 });
 // 引入接口
+// "id": 3,
+//             "createTime": "2023-04-16T14:45:18.000+0000",
+//             "updateTime": "2023-04-17T10:39:22.000+0000",
+//             "start": "我是默认字符串",
+//             "end": "我是默认字符串",
+//             "name": "我是默认字符串",
+//             "weight": 885,
+//             "isDanger": 11,
+//             "customId": 2,
+//             "fee": 169,
+//             "isDeleted": 0,
+//             "flag": 1,
+//             "situation": null,
+//             "driverId": null,
+//             "carId": null
 const tableData = reactive({
   tableData: [
     {
@@ -209,47 +165,43 @@ const tableData = reactive({
       name: "",
       weight: "",
       isDanger: "",
-
       fee: "",
+      customId: "",
+      isDeleted: 0,
+      flag: 1,
+      situation: null,
+      driverId: null,
+      carId: null,
     },
   ],
   searchContent: "",
-  addData: {
-    start: "",
-    end: "",
-    name: "",
-    weight: "",
-    isDanger: "",
-
-    fee: "",
+  driverSelected: "",
+  driverSelectOptions: {
+    value: "",
+    label: "",
   },
-  editData: {
-    start: "",
-    end: "",
-    name: "",
-    weight: "",
-    isDanger: "",
-
-    fee: "",
+  carSelected: "",
+  cardSelectOptions: {
+    value: "",
+    label: "",
   },
 });
 
 onMounted(() => {
   console.log(store);
 });
-const openAdd = () => {
+const openAdd = (row: any) => {
   dialogVisible.isShowAdd = true;
-  tableData.addData = {
-    start: "",
-    end: "",
-    name: "",
-    weight: "",
-    isDanger: "",
-
-    fee: "",
-  };
+  tableData.driverSelected = "";
 };
-
+const getTableData = () => {
+  getUnallocated().then((res) => {
+    tableData.tableData = res.data;
+  });
+};
+onMounted(() => {
+  getTableData();
+});
 const handleSearch = () => {
   console.log(tableData.searchContent);
 };
@@ -257,19 +209,17 @@ const handleClose = () => {
   dialogVisible.isShowAdd = false;
   dialogVisible.isShowEdit = false;
 };
-const addData = () => {
-  tableData.tableData.push(tableData.addData);
+const addData = (row: any) => {
+  // console.log(tableData.addData);
+  dialogVisible.isShowAdd = false;
+  console.log("添加数据", row);
 };
 const editData = () => {
-  console.log(tableData.editData);
-  // dialogVisible.isShowEdit = false;
+  console.log(tableData.driverSelected);
+  dialogVisible.isShowEdit = false;
 };
-const openEdit = (index: number, row: any) => {
-  dialogVisible.isShowEdit = true;
-  tableData.editData = row;
-};
-const deleteData = (index: number, row: any) => {
-  console.log("删除数据", row);
+const openEdit = (row: any) => {
+  console.log("编辑数据", row);
 };
 function pageIndex(res: number) {
   page.currentPage = res;

@@ -157,7 +157,6 @@ const Form = reactive({
   userId: "test",
   userName: "test",
 });
-console.log(router, route);
 // 用户校验
 const rules = {
   username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
@@ -204,7 +203,6 @@ const submitForm = () => {
   }
 };
 const register = () => {
-  console.log(Form.registerForm);
   customerRegister(Form.registerForm).then((res) => {
     console.log(res);
     if (res.code == 200) {

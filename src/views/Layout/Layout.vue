@@ -5,7 +5,7 @@
     <div class="content-box" :class="{ 'content-collapse': collapse }">
       <Tags />
       <div class="content">
-        <router-view v-slot="{ Component }" :UserInfo="UserInfo">
+        <router-view v-slot="{ Component }">
           <transition name="move" mode="out-in">
             <keep-alive :include="tagsList">
               <component :is="Component" />
@@ -38,10 +38,6 @@ const roleName = computed(() => {
     case "3":
       return "客户";
   }
-});
-const UserInfo = reactive({
-  roleName: roleName,
-  userFlag: store.userFlag,
 });
 const SidebarList = computed(() => {
   switch (store.userFlag) {
@@ -148,10 +144,6 @@ const customerSiderbarList = [
         index: "/current-task",
         title: "当前任务",
       },
-      {
-        index: "task-detail",
-        title: "任务详情",
-      },
     ],
   },
 ];
@@ -166,7 +158,6 @@ defineExpose({
 .content {
   width: 100%;
   height: 100%;
-  background: url("@/assets/img/220228-162964094837fa.jpg") no-repeat;
   background-size: 100% 100%;
 }
 </style>

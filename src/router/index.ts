@@ -150,12 +150,6 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@views/Customer/TaskPublish.vue"),
       },
       {
-        path: "/task-detail/:id",
-        name: "任务详情",
-        meta: { title: "任务详情" },
-        component: () => import("@views/Customer/TaskDetail.vue"),
-      },
-      {
         path: "/current-task",
         name: "当前任务",
         meta: { title: "当前任务" },

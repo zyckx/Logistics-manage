@@ -75,14 +75,14 @@ const closeTags = (index: number) => {
 
 // 设置标签
 const setTags = (route: RouteLocationNormalized) => {
-  console.log("tagsList");
-  console.log(tagsList);
-  console.log("router");
-  console.log(route);
-  console.log(route.fullPath);
-  console.log("--------");
+  // console.log("tagsList");
+  // console.log(tagsList);
+  // console.log("router");
+  // console.log(route);
+  // console.log(route.fullPath);
+  // console.log("--------");
   const isExist = tagsList.value.some((item) => {
-    console.log(item.path);
+    // console.log(item.path);
     return item.path === route.fullPath;
   });
   if (!isExist) {

@@ -138,13 +138,13 @@
       <el-table-column fixed="right" label="操作" width="150">
         <template #default="scope">
           <el-button
-            type="text"
+     
             size="small"
             @click="openEdit(scope.$index, scope.row)"
             >编辑
           </el-button>
           <el-button
-            type="text"
+    
             size="small"
             @click="deleteData(scope.$index, scope.row)"
             >删除</el-button
