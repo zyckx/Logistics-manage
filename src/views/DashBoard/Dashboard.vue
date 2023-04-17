@@ -12,7 +12,7 @@
               alt="user-logo"
             />
             <div class="user-info-cont">
-              <div class="user-info-name">{{ name }}</div>
+              <div class="user-info-name">{{ }}</div>
               <div>当前身份：{{ props.UserInfo.roleName }}</div>
               <div style="font-size: 20px">欢迎您使用物流公司运营管理系统</div>
             </div>
@@ -41,29 +41,19 @@
           </template>
           <template v-if="props.UserInfo.userFlag == '3'">
             <!-- 用户运输任务展示 -->
-            <el-table
-              :data="props.UserInfo.taskList"
-              style="width: 100%; height: 100%"
-              border
-            >
+            <el-table :data="taskList" style="width: 100%; height: 100%" border>
               <el-table-column prop="start" label="起点" />
               <el-table-column prop="end" label="终点" />
               <el-table-column prop="name" label="货物名称" />
               <el-table-column prop="weight" label="重量" />
               <el-table-column prop="isDanger" label="是否危险" />
-              <el-table-column prop="customerName" label="客户名称" />
-              <el-table-column prop="customerPhone" label="客户电话" />
+              <el-table-column prop="customId" label="客户ID" />
+              <el-table-column prop="driverId" label="司机ID" />
+              <el-table-column prop="carId" label="车辆ID" />
+              <el-table-column prop="situation" label="地点" />
+              <el-table-column prop="flag" label="状态" />
+              <el-table-column prop="isDeleted" label="是否取消" />
               <el-table-column prop="fee" label="运费" />
-              <el-table-column fixed="right" label="操作" width="150">
-                <template #default="scope">
-                  <el-button
-                    type="text"
-                    size="small"
-                    @click="openEdit(scope.$index, scope.row)"
-                    >查看详情</el-button
-                  >
-                </template>
-              </el-table-column>
             </el-table>
           </template>
           <template v-else="props.UserInfo.userFlag == '2'">
@@ -78,19 +68,13 @@
               <el-table-column prop="name" label="货物名称" />
               <el-table-column prop="weight" label="重量" />
               <el-table-column prop="isDanger" label="是否危险" />
-              <el-table-column prop="customerName" label="客户名称" />
-              <el-table-column prop="customerPhone" label="客户电话" />
+              <el-table-column prop="customId" label="客户ID" />
+              <el-table-column prop="driverId" label="司机ID" />
+              <el-table-column prop="carId" label="车辆ID" />
+              <el-table-column prop="situation" label="地点" />
+              <el-table-column prop="flag" label="状态" />
+              <el-table-column prop="isDeleted" label="是否取消" />
               <el-table-column prop="fee" label="运费" />
-              <el-table-column fixed="right" label="操作" width="150">
-                <template #default="scope">
-                  <el-button
-                    type="text"
-                    size="small"
-                    @click="openEdit(scope.$index, scope.row)"
-                    >查看详情</el-button
-                  >
-                </template>
-              </el-table-column>
             </el-table>
           </template>
         </el-card>
@@ -100,7 +84,9 @@
 </template>
 
 <script setup lang="ts">
-const name = localStorage.getItem("ms_username");
+import { useGlobalStore } from "@/store/UserStore";
+import { getCurrentTask } from "@/api/Customer";
+const store = useGlobalStore();
 const currentTime = ref("");
 const router = useRouter();
 const props = defineProps({
@@ -109,9 +95,11 @@ const props = defineProps({
     default: () => {},
   },
 });
-
+const taskList = ref([]);
 onMounted(() => {
-  console.log(props.UserInfo);
+  getCurrentTask().then((res) => {
+    taskList.value = res.data;
+  });
 });
 // 当前登录时间
 onMounted(() => {

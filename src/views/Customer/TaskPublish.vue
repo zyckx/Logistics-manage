@@ -255,14 +255,7 @@ const tableData = reactive({
     fee: 0,
   },
 });
-
-/* "end": "我是默认字符串",
-    "fee": 169,
-    "isDanger": 11,
-    "name": "我是默认字符串",
-    "start": "我是默认字符串",
-    "weight": 885 */
-onMounted(() => {
+const updateTableData = () => {
   getTaskList().then((res) => {
     if (res.code === 200) {
       tableData.tableData = res.data;
@@ -273,6 +266,15 @@ onMounted(() => {
       ElMessage.error(res.msg);
     }
   });
+};
+/* "end": "我是默认字符串",
+    "fee": 169,
+    "isDanger": 11,
+    "name": "我是默认字符串",
+    "start": "我是默认字符串",
+    "weight": 885 */
+onMounted(() => {
+  updateTableData();
 });
 const openAdd = () => {
   dialogVisible.isShowAdd = true;
@@ -297,6 +299,8 @@ const addData = () => {
   publishTask(JSON.stringify(tableData.addData)).then((res) => {
     if (res.code === 200) {
       ElMessage.success("添加成功");
+      dialogVisible.isShowAdd = false;
+      updateTableData();
     } else {
       ElMessage.error(res.msg);
     }

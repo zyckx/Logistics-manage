@@ -7,6 +7,7 @@ export const useGlobalStore = defineStore({
     userId: "",
     tagsList: [] as ITagList[], // 标签列表
     collapse: false, // 侧边栏是否折叠
+    userinfo:{}
   }),
   actions: {
     setUserFlag(Flag: string) {
@@ -24,10 +25,10 @@ export const useGlobalStore = defineStore({
     clearTags(): void {
       this.tagsList = [];
     },
-    closeTagsOther(data) {
+    closeTagsOther(data:any) {
       this.tagsList = data;
     },
-    closeCurrentTag(data) {
+    closeCurrentTag(data:any) {
       for (let i = 0, len = this.tagsList.length; i < len; i++) {
         const item = this.tagsList[i];
         if (item.path === data.$route.fullPath) {

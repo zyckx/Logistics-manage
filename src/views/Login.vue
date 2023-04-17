@@ -9,6 +9,7 @@
         ref="login"
         label-width="0px"
         class="ms-content"
+        v-show="IsLogin"
         @keyup.enter="submitForm"
       >
         <el-radio-group v-model="Form.userFlag" size="large">
@@ -42,6 +43,91 @@
         <div class="login-btn">
           <el-button type="primary" @click="submitForm">登录</el-button>
         </div>
+
+        <div>
+          <p>
+            还没有账号？<span
+              style="font-style: italic"
+              @click="() => (IsLogin = !IsLogin)"
+              >点击注册</span
+            >
+          </p>
+        </div>
+      </el-form>
+      <el-form
+        :model="Form.registerForm"
+        :rules="rules"
+        ref="login"
+        label-width="0px"
+        class="ms-content"
+        @keyup.enter="submitForm"
+        v-show="!IsLogin"
+      >
+        <el-radio-group v-model="Form.userFlag" size="large">
+          <el-radio-button label="3">用户</el-radio-button>
+        </el-radio-group>
+        <div style="height: 20px"></div>
+        <el-form-item prop="account">
+          <el-input v-model="Form.registerForm.account" placeholder="account">
+            <template #prepend>
+              <el-icon :size="20">
+                <Edit />
+              </el-icon>
+            </template>
+          </el-input>
+        </el-form-item>
+       
+        <el-form-item prop="name">
+          <el-input
+            type="text"
+            placeholder="name"
+            v-model="Form.registerForm.name"
+          >
+            <template #prepend>
+              <el-icon :size="20">
+                <Lock />
+              </el-icon>
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="phoneNum">
+          <el-input
+            type="text"
+            placeholder="phoneNum"
+            v-model.number="Form.registerForm.phoneNum"
+          >
+            <template #prepend>
+              <el-icon :size="20">
+                <Lock />
+              </el-icon>
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            type="password"
+            placeholder="password"
+            v-model="Form.registerForm.password"
+          >
+            <template #prepend>
+              <el-icon :size="20">
+                <Lock />
+              </el-icon>
+            </template>
+          </el-input>
+        </el-form-item>
+        <div class="login-btn">
+          <el-button type="primary" @click="register">注册</el-button>
+        </div>
+        <div>
+          <p>
+            已有账号<span
+              style="font-style: italic"
+              @click="() => (IsLogin = !IsLogin)"
+              >去登录</span
+            >
+          </p>
+        </div>
       </el-form>
     </div>
   </div>
@@ -49,11 +135,13 @@
 
 <script setup lang="ts">
 import { useGlobalStore } from "@/store/UserStore";
-import { customerLogin } from "@/api/Customer/index";
+import { customerLogin,customerRegister } from "@/api/Customer/index";
 import { driverLogin } from "@/api/Driver/index";
 import { adminLogin } from "@/api/Admin/index";
+import { register } from "@/api/User/Register";
 const router = useRouter();
 const route = useRoute();
+const IsLogin = ref(true);
 const Form = reactive({
   loginForm: {
     account: "",
@@ -61,10 +149,11 @@ const Form = reactive({
   },
   registerForm: {
     account: "",
+    name: "",
     password: "",
-    password2: "",
+    phoneNum: 0,
   },
-  userFlag: "1",
+  userFlag: "3",
   userId: "test",
   userName: "test",
 });
@@ -114,7 +203,18 @@ const submitForm = () => {
     });
   }
 };
-
+const register = () => {
+  console.log(Form.registerForm);
+  customerRegister(Form.registerForm).then((res) => {
+    console.log(res);
+    if (res.code == 200) {
+      ElMessage.success("注册成功");
+      IsLogin.value = true;
+    } else {
+      ElMessage.error("注册失败");
+    }
+  });
+};
 store.clearTags(); // 清空标签
 
 // defineExpose 可以省略

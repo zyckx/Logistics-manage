@@ -30,13 +30,21 @@
       border
       style="width: 100%"
     >
+      <el-table-column type="index" label="序号" width="50" />
       <el-table-column prop="start" label="起点" />
       <el-table-column prop="end" label="终点" />
       <el-table-column prop="name" label="货物名称" />
       <el-table-column prop="weight" label="重量" />
-      <el-table-column prop="isDanger" label="是否危险" />
-      <el-table-column prop="customerName" label="客户名称" />
-      <el-table-column prop="customerPhone" label="客户电话" />
+      <el-table-column prop="isDanger" label="是否危险">
+        <template #default="scope">
+          <el-tag v-if="scope.row.isDanger == 1" type="success">是</el-tag>
+          <el-tag v-else type="danger">否</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="customId" label="客户ID" />
+
+      <el-table-column prop="customName" label="客户名称" />
+      <el-table-column prop="phoneNum" label="客户电话" />
       <el-table-column prop="fee" label="运费" />
       <el-table-column fixed="right" label="操作" width="150">
         <template #default="scope">
@@ -70,7 +78,7 @@
 import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
-
+import { CheckList, getCheckList } from "@/api/Admin";
 const store = useGlobalStore();
 
 const page = reactive({
@@ -79,6 +87,16 @@ const page = reactive({
   total: 0,
   pageIndex: 1,
 });
+// "id": 6,
+//             "start": "我是默认字符串",
+//             "end": null,
+//             "name": "我是默认字符串",
+//             "weight": 885,
+//             "isDanger": 11,
+//             "customId": 2,
+//             "fee": 169,
+//             "customName": "我是默认字符串",
+//             "phoneNum": "2"
 // 引入接口
 const tableData = reactive({
   tableData: [
@@ -88,26 +106,48 @@ const tableData = reactive({
       name: "",
       weight: "",
       isDanger: "",
-
-      fee: "",
+      customId: null,
+      fee: null,
+      customName: "",
+      phoneNum: "",
     },
   ],
   searchContent: "",
 });
 
+const getTableData = () => {
+  getCheckList().then((res) => {
+    tableData.tableData = res.data;
+  });
+};
 onMounted(() => {
-  console.log(store);
+  getTableData();
 });
-
 const handleSearch = () => {
   console.log(tableData.searchContent);
 };
 
 const openEdit = (index: number, row: any) => {
-  console.log("同意");
+  console.log(index, row);
+  CheckList(row.id, 1).then((res) => {
+    if (res.code == 200) {
+      ElMessage.success("审核通过");
+      getTableData();
+    } else {
+      ElMessage.error("审核失败");
+    }
+  });
 };
 const deleteData = (index: number, row: any) => {
-  console.log("删除数据", row);
+  console.log(index, row);
+  CheckList(row.id, 0).then((res) => {
+    if (res.code == 200) {
+      ElMessage.success("拒绝");
+      getTableData();
+    } else {
+      ElMessage.error("拒绝失败");
+    }
+  });
 };
 function pageIndex(res: number) {
   page.currentPage = res;
