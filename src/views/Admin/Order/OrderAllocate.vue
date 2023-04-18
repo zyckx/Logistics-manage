@@ -43,15 +43,6 @@
       width="30%"
       :before-close="handleClose"
     >
-      <!-- <el-select v-model="value" class="m-2" placeholder="Select" size="large">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select> -->
-
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible.isShowEdit = false">取消</el-button>
@@ -129,6 +120,7 @@ import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
 import { getUnallocated } from "@/api/Admin";
+
 const store = useGlobalStore();
 
 const page = reactive({
@@ -190,6 +182,7 @@ const tableData = reactive({
 onMounted(() => {
   console.log(store);
 });
+// 分页
 const openAdd = (row: any) => {
   dialogVisible.isShowAdd = true;
   tableData.driverSelected = "";
@@ -209,6 +202,7 @@ const handleClose = () => {
   dialogVisible.isShowAdd = false;
   dialogVisible.isShowEdit = false;
 };
+
 const addData = (row: any) => {
   // console.log(tableData.addData);
   dialogVisible.isShowAdd = false;
@@ -216,9 +210,12 @@ const addData = (row: any) => {
 };
 const editData = () => {
   console.log(tableData.driverSelected);
+  console.log("编辑数据", tableData.tableData);
   dialogVisible.isShowEdit = false;
 };
+
 const openEdit = (row: any) => {
+  dialogVisible.isShowEdit = true;
   console.log("编辑数据", row);
 };
 function pageIndex(res: number) {

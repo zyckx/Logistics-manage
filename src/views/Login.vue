@@ -76,7 +76,7 @@
             </template>
           </el-input>
         </el-form-item>
-       
+
         <el-form-item prop="name">
           <el-input
             type="text"
@@ -135,7 +135,7 @@
 
 <script setup lang="ts">
 import { useGlobalStore } from "@/store/UserStore";
-import { customerLogin,customerRegister } from "@/api/Customer/index";
+import { customerLogin, customerRegister } from "@/api/Customer/index";
 import { driverLogin } from "@/api/Driver/index";
 import { adminLogin } from "@/api/Admin/index";
 import { register } from "@/api/User/Register";
@@ -176,6 +176,7 @@ const submitForm = () => {
       if (res.code == 200) {
         ElMessage.success("登录成功");
         router.push("/admin");
+        store.userinfo = res.data;
       } else {
         ElMessage.error("登录失败,请检查账号密码");
       }
@@ -185,6 +186,7 @@ const submitForm = () => {
       console.log(res);
       if (res.code == 200) {
         ElMessage.success("登录成功");
+        store.userinfo = res.data;
         router.push("/driver");
       } else {
         ElMessage.error("登录失败,请检查账号密码");
@@ -195,6 +197,7 @@ const submitForm = () => {
       console.log(res);
       if (res.code == 200) {
         ElMessage.success("登录成功");
+        store.userinfo = res.data;
         router.push("/customer");
       } else {
         ElMessage.error("登录失败,请检查账号密码");

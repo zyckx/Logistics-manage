@@ -34,36 +34,16 @@
         ref="formRef"
         :model="tableData.addData"
       >
-        <el-form-item label="申请类型" prop="employee">
+        <el-form-item label="申请名称" prop="title">
           <el-input
-            v-model="tableData.addData.applyName"
-            placeholder="请输入申请类型"
+            v-model="tableData.addData.title"
+            placeholder="请输入申请名称"
           />
         </el-form-item>
-        <el-form-item label="用户名" prop="name">
+        <el-form-item label="申请内容" prop="request">
           <el-input
-            v-model="tableData.addData.name"
-            placeholder="请输入用户名"
-            maxlength="20"
-          />
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input
-            v-model="tableData.addData.phone"
-            placeholder="请输入手机号"
-            maxlength="10"
-          />
-        </el-form-item>
-        <el-form-item label="申请时间" prop="time">
-          <el-input
-            v-model="tableData.addData.time"
-            placeholder="请输入申请时间"
-          />
-        </el-form-item>
-        <el-form-item label="申请概述" prop="event">
-          <el-input
-            v-model="tableData.addData.event"
-            placeholder="请输入申请概述"
+            v-model="tableData.addData.request"
+            placeholder="请输入申请内容"
           />
         </el-form-item>
       </el-form>
@@ -72,60 +52,6 @@
         <span class="dialog-footer">
           <el-button @click="dialogVisible.isShowAdd = false">取消</el-button>
           <el-button type="primary" @click="addData">确认</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <!--编辑弹窗-->
-    <el-dialog
-      v-model="dialogVisible.isShowEdit"
-      title="编辑信息"
-      width="30%"
-      :before-close="handleClose"
-    >
-      <el-form
-        status-icon
-        label-width="6.25rem"
-        ref="formRef"
-        :model="tableData.editData"
-      >
-        <el-form-item label="申请类型" prop="employee">
-          <el-input
-            v-model="tableData.addData.applyName"
-            placeholder="请输入申请类型"
-          />
-        </el-form-item>
-        <el-form-item label="用户名" prop="name">
-          <el-input
-            v-model="tableData.addData.name"
-            placeholder="请输入用户名"
-            maxlength="20"
-          />
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input
-            v-model="tableData.addData.phone"
-            placeholder="请输入手机号"
-            maxlength="10"
-          />
-        </el-form-item>
-        <el-form-item label="申请时间" prop="time">
-          <el-input
-            v-model="tableData.addData.time"
-            placeholder="请输入申请时间"
-          />
-        </el-form-item>
-        <el-form-item label="申请概述" prop="event">
-          <el-input
-            v-model="tableData.addData.event"
-            placeholder="请输入申请概述"
-          />
-        </el-form-item>
-      </el-form>
-
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogVisible.isShowEdit = false">取消</el-button>
-          <el-button type="primary" @click="editData()">确认</el-button>
         </span>
       </template>
     </el-dialog>
@@ -140,25 +66,14 @@
       border
       style="width: 100%"
     >
-      <el-table-column prop="applyName" label="申请" />
-      <el-table-column prop="name" label="姓名" />
-      <el-table-column prop="phone" label="电话" />
-      <el-table-column prop="time" label="申请时间" />
-      <el-table-column prop="event" label="申请事件" />
-      <el-table-column fixed="right" label="操作" width="150">
-        <template #default="scope">
-          <el-button
-       
-            size="small"
-            @click="openEdit(scope.$index, scope.row)"
-            >编辑
-          </el-button>
-          <el-button
-     
-            size="small"
-            @click="deleteData(scope.$index, scope.row)"
-            >撤销</el-button
-          >
+      <el-table-column type="index" label="序号" width="50"></el-table-column>
+      <el-table-column prop="title" label="申请名称" />
+      <el-table-column prop="request" label="申请内容" />
+      <el-table-column prop="driverId" label="申请id" />
+      <el-table-column prop="flag" label="是否通过">
+        <template #default="{ row }">
+          <el-tag v-if="row.flag === 1" type="success">通过</el-tag>
+          <el-tag v-else type="danger">未通过</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -177,7 +92,7 @@
 import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
-
+import { PublishApply, getApply } from "@/api/Driver";
 const store = useGlobalStore();
 
 const page = reactive({
@@ -191,44 +106,53 @@ const dialogVisible = reactive({
   isShowAdd: false,
 });
 // 引入接口
+// "id": 2,
+//             "createTime": "2023-04-18T04:22:44.000+0000",
+//             "updateTime": "2023-04-18T04:22:44.000+0000",
+//             "title": "我是默认字符串",
+//             "request": "我是默认字符串",
+//             "driverId": 5,
+//             "flag": null
 const tableData = reactive({
   tableData: [
     {
-      applyName: "",
-      name: "111",
-      phone: "111",
-      time: "111",
-      event: "111",
+      id: 2,
+      createTime: "2023-04-18T04:22:44.000+0000",
+      updateTime: "2023-04-18T04:22:44.000+0000",
+      title: "我是默认字符串",
+      request: "我是默认字符串",
+      driverId: 5,
+      flag: null,
     },
   ],
   searchContent: "",
   addData: {
-    applyName: "",
-    name: "111",
-    phone: "111",
-    time: "111",
-    event: "111",
+    title: "我是默认字符串",
+    request: "我是默认字符串",
   },
   editData: {
-    applyName: "",
-    name: "111",
-    phone: "111",
-    time: "111",
-    event: "111",
+    title: "我是默认字符串",
+    request: "我是默认字符串",
   },
 });
-
+const getTableData = () => {
+  getApply().then((res) => {
+    console.log(res);
+    if (res.code === 200) {
+      tableData.tableData = res.data;
+      page.total = res.data.length;
+    }
+  });
+};
 onMounted(() => {
+  getTableData();
   console.log(store);
 });
 const openAdd = () => {
   dialogVisible.isShowAdd = true;
   tableData.addData = {
-    applyName: "",
-    name: "111",
-    phone: "111",
-    time: "111",
-    event: "111",
+    title: "我是默认字符串",
+    request: "我是默认字符串",
   };
 };
 
@@ -240,7 +164,16 @@ const handleClose = () => {
   dialogVisible.isShowEdit = false;
 };
 const addData = () => {
-  console.log("添加数据", tableData.addData);
+  console.log(tableData.addData);
+  PublishApply(tableData.addData).then((res) => {
+    if (res.code === 200) {
+      ElMessage.success("添加成功");
+
+      getTableData();
+      dialogVisible.isShowAdd = false;
+    }
+  });
+  dialogVisible.isShowAdd = false;
 };
 const editData = () => {
   console.log(tableData.editData);

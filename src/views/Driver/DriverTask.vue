@@ -30,27 +30,20 @@
     >
       <el-table-column prop="start" label="起点" />
       <el-table-column prop="end" label="终点" />
-      <el-table-column prop="name" label="货物名称" />
-      <el-table-column prop="weight" label="重量" />
-      <el-table-column prop="isDanger" label="是否危险" />
-      <el-table-column prop="customerName" label="客户名称" />
-      <el-table-column prop="customerPhone" label="客户电话" />
-      <el-table-column prop="fee" label="运费" />
+      <el-table-column prop="carId" label="车辆id" />
+      <el-table-column prop="phoneNum" label="客户电话" />
       <el-table-column fixed="right" label="状态" width="150">
-        <template #default="scope">
+        <template #default="scoped">
+          <el-button type="primary">正在运输中 </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" width="150">
+        <template #default="scoped">
           <el-button
-            type="success"
-            size="small"
-            @click="openEdit(scope.$index, scope.row)"
-            >运输中
-          </el-button>
-          <!-- 完成按钮 -->
-
-          <el-button
-            type="warning"
-            size="small"
-            @click="openEdit(scope.$index, scope.row)"
-            >完成
+            v-if="scoped.row.status === 0"
+            type="primary"
+            @click="openEdit(scoped.$index, scoped.row)"
+            >标记为完成
           </el-button>
         </template>
       </el-table-column>
@@ -70,7 +63,7 @@
 import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
-
+import { getTask, updateTaskStatus } from "@/api/Driver";
 const store = useGlobalStore();
 
 const page = reactive({
@@ -83,17 +76,23 @@ const dialogVisible = reactive({
   isShowEdit: false,
   isShowAdd: false,
 });
+const updateTable = () => {
+  getTask().then((res) => {
+    console.log(res);
+
+    page.total = res.data.total;
+    tableData.tableData = res.data.data;
+  });
+};
 // 引入接口
+
 const tableData = reactive({
   tableData: [
     {
-      start: "",
-      end: "",
-      name: "",
-      weight: "",
-      isDanger: "",
-
-      fee: "",
+      carId: null,
+      end: null,
+      phoneNum: "2",
+      start: "瓦达瓦达",
     },
   ],
   searchContent: "",
@@ -108,7 +107,7 @@ const tableData = reactive({
 });
 
 onMounted(() => {
-  console.log(store);
+  updateTable();
 });
 
 const handleSearch = () => {
@@ -117,7 +116,10 @@ const handleSearch = () => {
 
 const openEdit = (index: number, row: any) => {
   dialogVisible.isShowEdit = true;
-  tableData.editData = row;
+  updateTaskStatus(row.id).then((res) => {
+    console.log(res);
+    updateTable();
+  });
 };
 function pageIndex(res: number) {
   page.currentPage = res;

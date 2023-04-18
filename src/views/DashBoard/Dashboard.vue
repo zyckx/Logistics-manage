@@ -24,12 +24,21 @@
         </el-card>
 
         <!-- 语言详情 -->
-        <el-card shadow="hover" style="height: 252px">
+        <el-card shadow="hover" v-if="store.userFlag == '2'">
           <template #header>
             <div class="clearfix">
               <span>公告</span>
             </div>
           </template>
+          <ul class="notice-wrap">
+            <li class="notice" v-for="notice in notices">
+              <span class="notice-title">{{ notice.title }}</span>
+              <span class="notice-time">{{
+                notice.createTime.substring(0, 10)
+              }}</span>
+              <span class="notice-content">{{ notice.content }}</span>
+            </li>
+          </ul>
         </el-card>
       </el-col>
 
@@ -41,42 +50,25 @@
           </template>
           <template v-if="store.userFlag == '3'">
             <!-- 用户运输任务展示 -->
-            <!-- "id": 3, 
-        "createTime": "2023-04-17T05:12:06.000+0000", 
-        "updateTime": "2023-04-17T05:12:06.000+0000", 
-        "name": "zy", 
-        "phoneNum": "15133807162", 
-        "password": "794274c59b02039a17ee3d1c20910488", 
-        "account": "test" -->
-            <el-table
-              :data="UserInfo.tableData"
-              style="width: 100%; height: 100%"
-              border
-            >
-              <el-table-column prop="id" label="用户id" />
-              <el-table-column prop="account" label="账号" />
-              <el-table-column prop="name" label="姓名" />
-              <el-table-column prop="phoneNum" label="联系方式" />
-            </el-table>
+            <ul>
+              <li>姓名：{{ store.userinfo.name }}</li>
+              <li>电话：{{ store.userinfo.phoneNum }}</li>
+              <li>账号：{{ store.userinfo.account }}</li>
+            </ul>
           </template>
           <template v-else="store.userFlag == '2'">
             <!-- 用户运输任务展示 -->
-            <el-table
-              :data="UserInfo.tableData"
-              style="width: 100%; height: 100%"
-              border
-            >
-              <el-table-column prop="id" label="用户id" />
-              <el-table-column prop="numid" label="账号" />
-              <el-table-column prop="name" label="姓名" />
-              <el-table-column prop="phoneNum" label="联系方式" />
-              <el-table-column prop="hasDanger" label="资格证">
-                <template #default="{ row }">
-                  <el-tag v-if="row.hasDanger == 1" type="success">有</el-tag>
-                  <el-tag v-else type="danger">无</el-tag>
-                </template>
-              </el-table-column>
-            </el-table>
+            <ul>
+              <li>姓名：{{ store.userinfo.name }}</li>
+              <li>电话：{{ store.userinfo.phoneNum }}</li>
+              <li>账号：{{ store.userinfo.numid }}</li>
+              <li>
+                是否拥有资格证 ：
+                <el-tag>
+                  {{ store.userinfo.hasDanger == 1 ? "是" : "否" }}
+                </el-tag>
+              </li>
+            </ul>
           </template>
         </el-card>
       </el-col>
@@ -86,45 +78,28 @@
 
 <script setup lang="ts">
 import { useGlobalStore } from "@/store/UserStore";
-import { getCurrentTask, getPersonInfo } from "@/api/Customer";
+import { getCurrentTask } from "@/api/Customer";
 import { getAllNotice } from "@/api/Driver";
-import { getInfo } from "@/api/Driver";
+
 const store = useGlobalStore();
 const currentTime = ref("");
 const router = useRouter();
 const UserInfo = reactive({
   roleName: "",
-  tableData: [
-    {
-      id: 5,
-      createTime: "2023-04-16T15:50:26.000+0000",
-      updateTime: "2023-04-16T15:50:26.000+0000",
-      numid: "15",
-      name: "我是默认字符串",
-      phoneNum: "2",
-      hasDanger: 8,
-      password: "ac632e568953aa62a40737422bafee68",
-      isDelete: 0,
-      isUsed: 0,
-    },
-  ],
 });
-const notice = reactive({
-  id: 2,
-  createTime: "2023-04-16T13:22:30.000+0000",
-  updateTime: "2023-04-16T13:22:30.000+0000",
-  title: "我是默认字符串",
-  content: "我是默认字符串",
-  isDeleted: 0,
-});
+const notices = ref([
+  {
+    id: 2,
+    createTime: "2023-04-16T13:22:30.000+0000",
+    updateTime: "2023-04-16T13:22:30.000+0000",
+    title: "我是默认字符串",
+    content: "我是默认字符串",
+    isDeleted: 0,
+  },
+]);
 const getNotice = () => {
   getAllNotice().then((res) => {
-    notice.id = res.data.id;
-    notice.createTime = res.data.createTime;
-    notice.updateTime = res.data.updateTime;
-    notice.title = res.data.title;
-    notice.content = res.data.content;
-    notice.isDeleted = res.data.isDeleted;
+    notices.value = res.data;
   });
 };
 const getUserInfo = () => {
@@ -133,16 +108,9 @@ const getUserInfo = () => {
       UserInfo.roleName = "管理员";
       break;
     case "2":
-      getInfo().then((res) => {
-        UserInfo.tableData = res.data;
-      });
-      getNotice();
       UserInfo.roleName = "司机";
       break;
     case "3":
-      getPersonInfo().then((res) => {
-        UserInfo.tableData = res.data;
-      });
       UserInfo.roleName = "客户";
       break;
   }
@@ -291,5 +259,35 @@ const openEdit = (index: number, row: any) => {
   width: 100%;
   margin: 20px 0px 0px 70px;
   justify-content: space-between;
+}
+ul li {
+  list-style: none;
+}
+.notice {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.notice .notice-title {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.notice .notice-time {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+.notice .notice-content {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  text-align: justify;
 }
 </style>

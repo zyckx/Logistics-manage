@@ -155,25 +155,18 @@
       <el-table-column prop="driverId" label="司机ID" />
       <el-table-column prop="carId" label="车辆ID" />
       <el-table-column prop="situation" label="地点" />
-      <el-table-column prop="flag" label="状态" />
-      <el-table-column prop="isDeleted" label="是否取消" />
-      <el-table-column prop="fee" label="运费" />
-      <el-table-column fixed="right" label="操作" width="150">
+      <el-table-column prop="flag" label="状态">
         <template #default="scope">
-          <el-button
-
-            size="small"
-            @click="openEdit(scope.$index, scope.row)"
-            >编辑
-          </el-button>
-          <el-button
-  
-            size="small"
-            @click="deleteData(scope.$index, scope.row)"
-            >删除</el-button
+          <el-tag v-if="scope.row.flag === 1" type="success">审核通过</el-tag>
+          <el-tag v-else-if="scope.row.flag === 0" type="danger"
+            >审核未通过</el-tag
+          >
+          <el-tag v-else-if="scope.row.flag === null" type="warning"
+            >未审核</el-tag
           >
         </template>
       </el-table-column>
+      <el-table-column prop="fee" label="运费" />
     </el-table>
     <div style="margin-top: 0.625rem; text-align: right">
       <pagination

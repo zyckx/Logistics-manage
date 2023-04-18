@@ -115,11 +115,6 @@ const driverSiderbarList = [
     title: "任务查看",
   },
   {
-    icon: "fa fa-drivers-license",
-    index: "/driver-person",
-    title: "个人信息",
-  },
-  {
     icon: "fa fa-pencil",
     index: "/driver-apply",
     title: "申请",

@@ -125,12 +125,6 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@views/Driver/DriverTask.vue"),
       },
       {
-        path: "/driver-person",
-        name: "个人信息",
-        meta: { title: "个人信息" },
-        component: () => import("@views/Driver/DriverPerson.vue"),
-      },
-      {
         path: "/driver-apply",
         name: "申请",
         meta: { title: "申请" },

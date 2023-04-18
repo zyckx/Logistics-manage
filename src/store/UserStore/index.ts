@@ -7,7 +7,19 @@ export const useGlobalStore = defineStore({
     userId: "",
     tagsList: [] as ITagList[], // 标签列表
     collapse: false, // 侧边栏是否折叠
-    userinfo:{}
+    userinfo:{
+      id: 5,
+      createTime: "2023-04-16T15:50:26.000+0000",
+      updateTime: "2023-04-16T15:50:26.000+0000",
+      numid: "15",
+      name: "我是默认字符串",
+      phoneNum: "2",
+      hasDanger: 8,
+      password: "ac632e568953aa62a40737422bafee68",
+      isDelete: 0,
+      isUsed: 0,
+      account: "2",
+    }
   }),
   actions: {
     setUserFlag(Flag: string) {
