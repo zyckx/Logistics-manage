@@ -7,7 +7,7 @@
           <!--           搜索框 -->
           <el-input
             v-model="tableData.searchContent"
-            placeholder="搜索内容"
+            placeholder="搜索订单"
             class="grid-content handle-input mr10"
           />
 
@@ -15,111 +15,10 @@
           <el-button type="primary" :icon="Search" @click="handleSearch"
             >搜索
           </el-button>
-          <!--添加按钮-->
-          <el-button type="primary" :icon="Search" @click="openAdd"
-            >添加
-          </el-button>
         </el-col>
       </el-row>
     </div>
-    <!--添加弹窗-->
-    <el-dialog
-      v-model="dialogVisible.isShowAdd"
-      title="添加信息"
-      width="30%"
-      :before-close="handleClose"
-    >
-      <el-form
-        status-icon
-        label-width="6.25rem"
-        ref="formRef"
-        :model="tableData.addData"
-      >
-        <el-form-item label="员工号" prop="employee">
-          <el-input
-            v-model="tableData.addData.employee"
-            placeholder="请输入员工号"
-          />
-        </el-form-item>
-        <el-form-item label="用户名" prop="name">
-          <el-input
-            v-model="tableData.addData.name"
-            placeholder="请输入用户名"
-            maxlength="20"
-          />
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input
-            v-model="tableData.addData.phone"
-            placeholder="请输入手机号"
-            maxlength="10"
-          />
-        </el-form-item>
-        <el-form-item label="是否有运输危险品运输资格证" prop="credit">
-          <el-input
-            v-model="tableData.addData.credit"
-            placeholder="是否有运输危险品运输资格证"
-            maxlength="10"
-          />
-        </el-form-item>
-      </el-form>
 
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogVisible.isShowAdd = false">取消</el-button>
-          <el-button type="primary" @click="addData">确认</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <!--编辑弹窗-->
-    <el-dialog
-      v-model="dialogVisible.isShowEdit"
-      title="编辑信息"
-      width="30%"
-      :before-close="handleClose"
-    >
-      <el-form
-        status-icon
-        label-width="6.25rem"
-        ref="formRef"
-        :model="tableData.editData"
-      >
-        <el-form-item label="员工号" prop="employee">
-          <el-input
-            v-model="tableData.editData.employee"
-            placeholder="请输入员工号"
-          />
-        </el-form-item>
-        <el-form-item label="用户名" prop="name">
-          <el-input
-            v-model="tableData.editData.name"
-            placeholder="请输入用户名"
-            maxlength="20"
-          />
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input
-            v-model="tableData.editData.phone"
-            placeholder="请输入手机号"
-            maxlength="10"
-          />
-        </el-form-item>
-        <el-form-item label="是否有运输危险品运输资格证" prop="credit">
-          <el-input
-            v-model="tableData.editData.credit"
-            placeholder="是否有运输危险品运输资格证"
-            maxlength="10"
-          />
-        </el-form-item>
-      </el-form>
-
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogVisible.isShowEdit = false">取消</el-button>
-          <el-button type="primary" @click="editData()">确认</el-button>
-        </span>
-      </template>
-    </el-dialog>
     <!--数据展示-->
     <el-table
       :data="
@@ -131,21 +30,35 @@
       border
       style="width: 100%"
     >
-      <el-table-column prop="employee" label="员工号" />
-      <el-table-column prop="name" label="姓名" />
-      <el-table-column prop="phone" label="电话" />
-      <el-table-column prop="credit" label="是否有运输危险品运输资格证" />
+      <el-table-column type="index" label="序号" width="50" />
+      <el-table-column prop="start" label="起点" />
+      <el-table-column prop="end" label="终点" />
+      <el-table-column prop="name" label="货物名称" />
+      <el-table-column prop="weight" label="重量" />
+      <el-table-column prop="isDanger" label="是否危险">
+        <template #default="scope">
+          <el-tag v-if="scope.row.isDanger == 1" type="success">是</el-tag>
+          <el-tag v-else type="danger">否</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="customId" label="客户ID" />
+
+      <el-table-column prop="customName" label="客户名称" />
+      <el-table-column prop="phoneNum" label="客户电话" />
+      <el-table-column prop="fee" label="运费" />
       <el-table-column fixed="right" label="操作" width="150">
         <template #default="scope">
           <el-button
+            type="success"
             size="small"
             @click="openEdit(scope.$index, scope.row)"
-            >编辑
+            >同意
           </el-button>
           <el-button
+            type="danger"
             size="small"
             @click="deleteData(scope.$index, scope.row)"
-            >删除</el-button
+            >拒绝</el-button
           >
         </template>
       </el-table-column>
@@ -165,7 +78,7 @@
 import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
-
+import { getApplyList, checkApply } from "@/api/Admin/Apply";
 const store = useGlobalStore();
 
 const page = reactive({
@@ -174,68 +87,58 @@ const page = reactive({
   total: 0,
   pageIndex: 1,
 });
-const dialogVisible = reactive({
-  isShowEdit: false,
-  isShowAdd: false,
-});
+
 // 引入接口
 const tableData = reactive({
   tableData: [
     {
-      employee: "",
-      name: "111",
-      phone: "111",
-      credit: "111",
+      start: "",
+      end: "",
+      name: "",
+      weight: "",
+      isDanger: "",
+      customId: null,
+      fee: null,
+      customName: "",
+      phoneNum: "",
     },
   ],
   searchContent: "",
-  addData: {
-    employee: "",
-    name: "",
-    phone: "",
-    credit: "",
-  },
-  editData: {
-    employee: "",
-    name: "",
-    phone: "",
-    credit: "",
-  },
 });
 
+const getTableData = () => {
+  getApplyList().then((res) => {
+    tableData.tableData = res.data;
+  });
+};
 onMounted(() => {
-
+  getTableData();
 });
-const openAdd = () => {
-  dialogVisible.isShowAdd = true;
-  tableData.addData = {
-    employee: "",
-    name: "",
-    phone: "",
-    credit: "",
-  };
-};
-
 const handleSearch = () => {
+  console.log(tableData.searchContent);
+};
 
-};
-const handleClose = () => {
-  dialogVisible.isShowAdd = false;
-  dialogVisible.isShowEdit = false;
-};
-const addData = () => {
-  console.log("添加数据", tableData.addData);
-};
-const editData = () => {
-  console.log(tableData.editData);
-  // dialogVisible.isShowEdit = false;
-};
 const openEdit = (index: number, row: any) => {
-  dialogVisible.isShowEdit = true;
-  tableData.editData = row;
+  console.log(index, row);
+  checkApply(row.id, 1).then((res) => {
+    if (res.code == 200) {
+      ElMessage.success("审核通过");
+      getTableData();
+    } else {
+      ElMessage.error("审核失败");
+    }
+  });
 };
 const deleteData = (index: number, row: any) => {
-  console.log("删除数据", row);
+  console.log(index, row);
+  checkApply(row.id, 0).then((res) => {
+    if (res.code == 200) {
+      ElMessage.success("拒绝");
+      getTableData();
+    } else {
+      ElMessage.error("拒绝失败");
+    }
+  });
 };
 function pageIndex(res: number) {
   page.currentPage = res;

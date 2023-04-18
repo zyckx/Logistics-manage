@@ -7,7 +7,7 @@
           <!--           搜索框 -->
           <el-input
             v-model="tableData.searchContent"
-            placeholder="搜索内容"
+            placeholder="搜索任务"
             class="grid-content handle-input mr10"
           />
 
@@ -17,7 +17,7 @@
           </el-button>
           <!--添加按钮-->
           <el-button type="primary" :icon="Search" @click="openAdd"
-            >添加
+            >发布任务
           </el-button>
         </el-col>
       </el-row>
@@ -35,32 +35,33 @@
         ref="formRef"
         :model="tableData.addData"
       >
-        <el-form-item label="员工号" prop="employee">
-          <el-input
-            v-model="tableData.addData.employee"
-            placeholder="请输入员工号"
-          />
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="tableData.addData.name" placeholder="请输入姓名" />
         </el-form-item>
-        <el-form-item label="用户名" prop="name">
+        <el-form-item label="账号" prop="numid">
           <el-input
-            v-model="tableData.addData.name"
-            placeholder="请输入用户名"
+            v-model="tableData.addData.numid"
+            placeholder="请输入账号"
             maxlength="20"
           />
         </el-form-item>
-        <el-form-item label="手机号" prop="phone">
+        <el-form-item label="密码" prop="password">
           <el-input
-            v-model="tableData.addData.phone"
-            placeholder="请输入手机号"
-            maxlength="10"
+            v-model="tableData.addData.password"
+            placeholder="请输入密码"
           />
         </el-form-item>
-        <el-form-item label="是否有运输危险品运输资格证" prop="credit">
+        <el-form-item label="手机号" prop="phoneNum">
           <el-input
-            v-model="tableData.addData.credit"
-            placeholder="是否有运输危险品运输资格证"
-            maxlength="10"
+            v-model="tableData.addData.phoneNum"
+            placeholder="请输入手机号"
           />
+        </el-form-item>
+        <el-form-item label="是否拥有资格证" prop="hasDanger">
+          <el-select v-model="tableData.addData.hasDanger" placeholder="请选择">
+            <el-option label="是" value="1" />
+            <el-option label="否" value="0" />
+          </el-select>
         </el-form-item>
       </el-form>
 
@@ -84,32 +85,27 @@
         ref="formRef"
         :model="tableData.editData"
       >
-        <el-form-item label="员工号" prop="employee">
-          <el-input
-            v-model="tableData.editData.employee"
-            placeholder="请输入员工号"
-          />
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="tableData.addData.name" placeholder="请输入姓名" />
         </el-form-item>
-        <el-form-item label="用户名" prop="name">
+        <el-form-item label="账号" prop="numid">
           <el-input
-            v-model="tableData.editData.name"
-            placeholder="请输入用户名"
+            v-model="tableData.addData.numid"
+            placeholder="请输入账号"
             maxlength="20"
           />
         </el-form-item>
-        <el-form-item label="手机号" prop="phone">
+        <el-form-item label="密码" prop="password">
           <el-input
-            v-model="tableData.editData.phone"
-            placeholder="请输入手机号"
-            maxlength="10"
+            v-model="tableData.addData.password"
+            placeholder="请输入密码"
           />
         </el-form-item>
-        <el-form-item label="是否有运输危险品运输资格证" prop="credit">
-          <el-input
-            v-model="tableData.editData.credit"
-            placeholder="是否有运输危险品运输资格证"
-            maxlength="10"
-          />
+        <el-form-item label="是否拥有资格证" prop="hasDanger">
+          <el-select v-model="tableData.addData.hasDanger" placeholder="请选择">
+            <el-option label="是" value="1" />
+            <el-option label="否" value="0" />
+          </el-select>
         </el-form-item>
       </el-form>
 
@@ -131,26 +127,25 @@
       border
       style="width: 100%"
     >
-      <el-table-column prop="employee" label="员工号" />
+      <!--  hasDanger: 1,
+      name: "我是默认字符串",
+      numid: 521,
+      password: "我是默认字符串",
+      phoneNum: 2, -->
       <el-table-column prop="name" label="姓名" />
-      <el-table-column prop="phone" label="电话" />
-      <el-table-column prop="credit" label="是否有运输危险品运输资格证" />
-      <el-table-column fixed="right" label="操作" width="150">
-        <template #default="scope">
-          <el-button
+      <el-table-column prop="numid" label="账号" />
+      <el-table-column prop="password" label="密码" />
+      <el-table-column prop="phoneNum" label="手机号" />
 
-            size="small"
-            @click="openEdit(scope.$index, scope.row)"
-            >编辑
-          </el-button>
-          <el-button
-     
-            size="small"
-            @click="deleteData(scope.$index, scope.row)"
-            >删除</el-button
-          >
+      <el-table-column prop="hasDanger" label="是否拥有资格证">
+        <template #default="{ row }">
+          <el-tag v-if="row.hasDanger == 1" type="success">是</el-tag>
+          <el-tag v-else type="danger">否</el-tag>
         </template>
       </el-table-column>
+      <el-table-column prop="customId" label="客户ID" />
+      <el-table-column prop="driverId" label="司机ID" />
+      <el-table-column prop="carId" label="车辆ID" />
     </el-table>
     <div style="margin-top: 0.625rem; text-align: right">
       <pagination
@@ -167,6 +162,7 @@
 import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
+import { addDriver } from "@/api/Admin";
 
 const store = useGlobalStore();
 
@@ -180,41 +176,77 @@ const dialogVisible = reactive({
   isShowEdit: false,
   isShowAdd: false,
 });
+// "id": 3,
+//             "createTime": "2023-04-16T14:45:18.000+0000",
+//             "updateTime": "2023-04-16T14:45:18.000+0000",
+//             "start": "我是默认字符串",
+//             "end": "我是默认字符串",
+//             "name": "我是默认字符串",
+//             "weight": 885,
+//             "isDanger": 11,
+//             "customId": 2,
+//             "fee": 169,
+//             "isDeleted": 0,
+//             "flag": null,
+//             "situation": null,
+//             "driverId": null,
+//             "carId": null
 // 引入接口
 const tableData = reactive({
   tableData: [
     {
-      employee: "",
-      name: "111",
-      phone: "111",
-      credit: "111",
+      hasDanger: 1,
+      name: "我是默认字符串",
+      numid: 521,
+      password: "我是默认字符串",
+      phoneNum: 2,
     },
   ],
   searchContent: "",
   addData: {
-    employee: "",
-    name: "",
-    phone: "",
-    credit: "",
+    hasDanger: 1,
+    name: "我是默认字符串",
+    numid: 521,
+    password: "我是默认字符串",
+    phoneNum: 2,
   },
   editData: {
-    employee: "",
-    name: "",
-    phone: "",
-    credit: "",
+    hasDanger: 1,
+    name: "我是默认字符串",
+    numid: 521,
+    password: "我是默认字符串",
+    phoneNum: 2,
   },
 });
+const updateTableData = () => {
+  /* getTaskList().then((res) => {
+    if (res.code === 200) {
+      tableData.tableData = res.data;
+      console.log(res);
 
+      page.total = res.data.length;
+    } else {
+      ElMessage.error(res.msg);
+    }
+  }); */
+};
+/* "end": "我是默认字符串",
+    "fee": 169,
+    "isDanger": 11,
+    "name": "我是默认字符串",
+    "start": "我是默认字符串",
+    "weight": 885 */
 onMounted(() => {
-  console.log(store);
+  updateTableData();
 });
 const openAdd = () => {
   dialogVisible.isShowAdd = true;
   tableData.addData = {
-    employee: "",
-    name: "",
-    phone: "",
-    credit: "",
+    hasDanger: 1,
+    name: "我是默认字符串",
+    numid: 521,
+    password: "我是默认字符串",
+    phoneNum: 2,
   };
 };
 
@@ -226,7 +258,15 @@ const handleClose = () => {
   dialogVisible.isShowEdit = false;
 };
 const addData = () => {
-  console.log("添加数据", tableData.addData);
+  addDriver(JSON.stringify(tableData.addData)).then((res) => {
+    if (res.code === 200) {
+      ElMessage.success("添加成功");
+      dialogVisible.isShowAdd = false;
+      updateTableData();
+    } else {
+      ElMessage.error(res.msg);
+    }
+  });
 };
 const editData = () => {
   console.log(tableData.editData);

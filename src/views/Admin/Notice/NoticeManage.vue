@@ -10,14 +10,13 @@
             placeholder="搜索任务"
             class="grid-content handle-input mr10"
           />
-
           <!-- 搜索按钮 -->
           <el-button type="primary" :icon="Search" @click="handleSearch"
             >搜索
           </el-button>
           <!--添加按钮-->
           <el-button type="primary" :icon="Search" @click="openAdd"
-            >发布任务
+            >发布公告
           </el-button>
         </el-col>
       </el-row>
@@ -35,25 +34,16 @@
         ref="formRef"
         :model="tableData.addData"
       >
-        <!-- "bands": "我是默认字符串",
-    "carId": 89,
-    "color": "我是默认字符串" -->
-        <el-form-item label="车牌号" prop="bands">
+        <el-form-item label="公告标题" prop="title">
           <el-input
-            v-model="tableData.addData.bands"
-            placeholder="请输入车牌号"
+            v-model="tableData.addData.title"
+            placeholder="请输入公告标题"
           />
         </el-form-item>
-        <el-form-item label="车辆ID" prop="carId">
+        <el-form-item label="公告内容" prop="content">
           <el-input
-            v-model="tableData.addData.carId"
-            placeholder="请输入车辆ID"
-          />
-        </el-form-item>
-        <el-form-item label="车辆颜色" prop="color">
-          <el-input
-            v-model="tableData.addData.color"
-            placeholder="请输入车辆颜色"
+            v-model="tableData.addData.content"
+            placeholder="请输入公告内容"
           />
         </el-form-item>
       </el-form>
@@ -62,46 +52,6 @@
         <span class="dialog-footer">
           <el-button @click="dialogVisible.isShowAdd = false">取消</el-button>
           <el-button type="primary" @click="addData">确认</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <!--编辑弹窗-->
-    <el-dialog
-      v-model="dialogVisible.isShowEdit"
-      title="编辑信息"
-      width="30%"
-      :before-close="handleClose"
-    >
-      <el-form
-        status-icon
-        label-width="6.25rem"
-        ref="formRef"
-        :model="tableData.editData"
-      >
-        <el-form-item label="车牌号" prop="bands">
-          <el-input
-            v-model="tableData.addData.bands"
-            placeholder="请输入车牌号"
-          />
-        </el-form-item>
-        <el-form-item label="车辆ID" prop="carId">
-          <el-input
-            v-model="tableData.addData.carId"
-            placeholder="请输入车辆ID"
-          />
-        </el-form-item>
-        <el-form-item label="车辆颜色" prop="color">
-          <el-input
-            v-model="tableData.addData.color"
-            placeholder="请输入车辆颜色"
-          />
-        </el-form-item>
-      </el-form>
-
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogVisible.isShowEdit = false">取消</el-button>
-          <el-button type="primary" @click="editData()">确认</el-button>
         </span>
       </template>
     </el-dialog>
@@ -116,10 +66,21 @@
       border
       style="width: 100%"
     >
-      <el-table-column type="index" label="序号" />
-      <el-table-column prop="bands" label="车牌号" />
-      <el-table-column prop="carId" label="车辆ID" />
-      <el-table-column prop="color" label="车辆 颜色" />
+      <el-table-column type="index" label="序号" width="50" />
+      <el-table-column prop="title" label="公告名称" />
+      <el-table-column prop="content" label="公告内容" />
+      <el-table-column prop="createTime" label="创建时间">
+        <template #default="scope">
+          {{ FormatTime(scope.row.createTime) }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="" label="操作">
+        <template #default="scope">
+          <el-button type="danger" size="small" @click="deleteData(scope.row)"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
     </el-table>
     <div style="margin-top: 0.625rem; text-align: right">
       <pagination
@@ -136,8 +97,9 @@
 import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
-import { addCar } from "@/api/Admin";
-
+import { addNotice, deleteNotice } from "@/api/Admin";
+import { getAllNotice } from "@/api/Driver";
+import { FormatTime } from "@/utils/FormatTime";
 const store = useGlobalStore();
 
 const page = reactive({
@@ -150,68 +112,45 @@ const dialogVisible = reactive({
   isShowEdit: false,
   isShowAdd: false,
 });
-//             "createTime": "2023-04-16T14:45:18.000+0000",
-//             "updateTime": "2023-04-16T14:45:18.000+0000",
-//             "start": "我是默认字符串",
-//             "end": "我是默认字符串",
-//             "name": "我是默认字符串",
-//             "weight": 885,
-//             "isDanger": 11,
-//             "customId": 2,
-//             "fee": 169,
-//             "isDeleted": 0,
-//             "flag": null,
-//             "situation": null,
-//             "driverId": null,
-//             "carId": null
 // 引入接口
 const tableData = reactive({
   tableData: [
     {
-      bands: "我是默认字符串",
-      carId: 89,
-      color: "我是默认字符串",
+      content: "我是默认字符串",
+      createTime: "2023-04-16T13:31:04.000+0000",
+      id: 3,
+      isDeleted: 0,
+      title: "我是默认字符串",
+      updateTime: "2023-04-16T13:31:04.000+0000",
     },
   ],
   searchContent: "",
   addData: {
-    bands: "我是默认字符串",
-    carId: 89,
-    color: "我是默认字符串",
-  },
-  editData: {
-    bands: "我是默认字符串",
-    carId: 89,
-    color: "我是默认字符串",
+    title: "",
+    content: "",
   },
 });
 const updateTableData = () => {
-  /* getTaskList().then((res) => {
+  getAllNotice().then((res) => {
     if (res.code === 200) {
+      console.log(res);
       tableData.tableData = res.data;
       console.log(res);
-
       page.total = res.data.length;
     } else {
       ElMessage.error(res.msg);
     }
-  }); */
+  });
 };
-/* "end": "我是默认字符串",
-    "fee": 169,
-    "isDanger": 11,
-    "name": "我是默认字符串",
-    "start": "我是默认字符串",
-    "weight": 885 */
+
 onMounted(() => {
   updateTableData();
 });
 const openAdd = () => {
   dialogVisible.isShowAdd = true;
   tableData.addData = {
-    bands: "我是默认字符串",
-    carId: 89,
-    color: "我是默认字符串",
+    title: "",
+    content: "",
   };
 };
 
@@ -223,7 +162,7 @@ const handleClose = () => {
   dialogVisible.isShowEdit = false;
 };
 const addData = () => {
-  addCar(JSON.stringify(tableData.addData)).then((res) => {
+  addNotice(JSON.stringify(tableData.addData)).then((res) => {
     if (res.code === 200) {
       ElMessage.success("添加成功");
       dialogVisible.isShowAdd = false;
@@ -233,16 +172,16 @@ const addData = () => {
     }
   });
 };
-const editData = () => {
-  console.log(tableData.editData);
-  // dialogVisible.isShowEdit = false;
-};
-const openEdit = (index: number, row: any) => {
-  dialogVisible.isShowEdit = true;
-  tableData.editData = row;
-};
-const deleteData = (index: number, row: any) => {
-  console.log("删除数据", row);
+
+const deleteData = (row: any) => {
+  deleteNotice(row.id).then((res) => {
+    if (res.code === 200) {
+      ElMessage.success("删除成功");
+      updateTableData();
+    } else {
+      ElMessage.error(res.msg);
+    }
+  });
 };
 function pageIndex(res: number) {
   page.currentPage = res;

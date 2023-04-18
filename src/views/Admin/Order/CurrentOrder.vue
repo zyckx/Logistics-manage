@@ -15,59 +15,9 @@
           <el-button type="primary" :icon="Search" @click="handleSearch"
             >搜索
           </el-button>
-          <!--添加按钮-->
-          <el-button type="primary" :icon="Search" @click="openAdd"
-            >发布任务
-          </el-button>
         </el-col>
       </el-row>
     </div>
-    <!--添加弹窗-->
-    <el-dialog
-      v-model="dialogVisible.isShowAdd"
-      title="分配车辆"
-      width="30%"
-      :before-close="handleClose"
-    >
-      <!-- 选择车辆 -->
-      <el-select v-model="tableData.carSelected" placeholder="请选择">
-        <el-option
-          v-for="item in tableData.cardSelectOptions"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id"
-        ></el-option>
-      </el-select>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogVisible.isShowAdd = false">取消</el-button>
-          <el-button type="primary" @click="addData">确认</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <!--编辑弹窗-->
-    <el-dialog
-      v-model="dialogVisible.isShowEdit"
-      title="分配司机"
-      width="30%"
-      :before-close="handleClose"
-    >
-      <!-- 选择司机 -->
-      <el-select v-model="tableData.driverSelected" placeholder="请选择">
-        <el-option
-          v-for="item in tableData.driverSelectOptions"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id"
-        ></el-option>
-      </el-select>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogVisible.isShowEdit = false">取消</el-button>
-          <el-button type="primary" @click="editData()">确认</el-button>
-        </span>
-      </template>
-    </el-dialog>
     <!--数据展示-->
     <el-table
       :data="
@@ -104,7 +54,6 @@
           <el-tag
             v-if="scope.row.driverId == 0 || scope.row.driverId == null"
             type="success"
-            @click="openEdit(scope.row)"
             >未分配</el-tag
           >
           <el-tag v-else type="danger">已分配</el-tag>
@@ -115,7 +64,6 @@
           <el-tag
             v-if="scope.row.carId == null || scope.row.carId == 0"
             type="success"
-            @click="openAdd(scope.row)"
             >未分配</el-tag
           >
           <el-tag v-else type="danger">已分配</el-tag>
@@ -137,13 +85,7 @@
 import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
-import { getUnallocated } from "@/api/Admin";
-import {
-  getDriverList,
-  getCarList,
-  assignDriver,
-  assignCar,
-} from "@/api/Admin";
+import { getDoingList } from "@/api/Admin";
 
 const store = useGlobalStore();
 const page = reactive({
@@ -213,8 +155,9 @@ onMounted(() => {
 });
 
 const getTableData = () => {
-  getUnallocated().then((res) => {
+  getDoingList().then((res) => {
     tableData.tableData = res.data;
+    page.total = res.data.length;
   });
 };
 onMounted(() => {
@@ -228,51 +171,9 @@ const handleClose = () => {
   dialogVisible.isShowEdit = false;
 };
 
-const addData = () => {
-  dialogVisible.isShowAdd = false;
-  assignCar(tableData.TaskId, tableData.carSelected).then((res) => {
-    if (res.code == 200) {
-      ElMessage.success("分配成功");
-      getTableData();
-    }
-  });
-};
-const editData = () => {
-  dialogVisible.isShowEdit = false;
-  assignDriver(tableData.TaskId, tableData.driverSelected).then((res) => {
-    if (res.code == 200) {
-      ElMessage.success("分配成功");
-      getTableData();
-    }
-  });
-};
-// 分页
-const openAdd = (row: any) => {
-  dialogVisible.isShowAdd = true;
-  tableData.carSelected = "";
-  tableData.TaskId = row.id;
-  getCarOptions();
-};
-const openEdit = (row: any) => {
-  dialogVisible.isShowEdit = true;
-  tableData.driverSelected = "";
-  tableData.TaskId = row.id;
-  getDriverOptions();
-};
 function pageIndex(res: number) {
   page.currentPage = res;
 }
-
-const getDriverOptions = () => {
-  getDriverList().then((res) => {
-    tableData.driverSelectOptions = res.data;
-  });
-};
-const getCarOptions = () => {
-  getCarList().then((res) => {
-    tableData.cardSelectOptions = res.data;
-  });
-};
 </script>
 
 <style scoped>

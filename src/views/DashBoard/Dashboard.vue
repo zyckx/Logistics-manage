@@ -121,6 +121,7 @@ onMounted(() => {
     taskList.value = res.data;
   });
   getUserInfo();
+  getNotice();
 });
 // 当前登录时间
 onMounted(() => {

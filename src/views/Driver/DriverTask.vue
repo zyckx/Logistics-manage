@@ -34,14 +34,12 @@
       <el-table-column prop="phoneNum" label="客户电话" />
       <el-table-column fixed="right" label="状态" width="150">
         <template #default="scoped">
-          <el-button type="primary">正在运输中 </el-button>
+          <el-button type="success">正在运输中 </el-button>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
         <template #default="scoped">
-          <el-button
-            type="primary"
-            @click="openEdit(scoped.$index, scoped.row)"
+          <el-button type="warning" @click="openEdit(scoped.$index, scoped.row)"
             >标记为完成
           </el-button>
         </template>
@@ -115,9 +113,9 @@ const handleSearch = () => {
 const openEdit = (index: number, row: any) => {
   dialogVisible.isShowEdit = true;
   updateTaskStatus(row.id).then((res) => {
-   if(res.code === 200){
-    ElMessage.success("标记成功");
-     updateTable();
+    if (res.code === 200) {
+      ElMessage.success("标记成功");
+      updateTable();
     }
   });
 };

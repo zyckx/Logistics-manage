@@ -68,6 +68,14 @@ const adminSidebarList = [
         index: "/order-allocate",
         title: "订单分配",
       },
+      {
+        index: "/current-order",
+        title: "进行中订单",
+      },
+      {
+        index: "/finished-order",
+        title: "已完成订单",
+      },
     ],
   },
   {
@@ -85,11 +93,6 @@ const adminSidebarList = [
         index: "/drivers-apply",
         title: "司机申请",
       },
-      {
-        icon: "fa fa-user",
-        index: "/announcement",
-        title: "发布公告",
-      },
     ],
   },
   {
@@ -97,10 +100,16 @@ const adminSidebarList = [
     index: "/vehicles",
     title: "车辆管理",
     subs: [
-      { index: "/vehicles", title: "车辆信息" },
-      { index: "/transport-tasks", title: "车辆申请" },
-      { index: "/announcement", title: "发布公告" },
+      {
+        index: "/vehicles",
+        title: "车辆信息",
+      },
     ],
+  },
+  {
+    icon: "fa fa-reorder",
+    index: "/notice-manage",
+    title: "公告管理",
   },
 ];
 const driverSiderbarList = [

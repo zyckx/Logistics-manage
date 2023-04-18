@@ -37,12 +37,28 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@views/Admin/Order/OrderVerify.vue"),
       },
       {
-        path: "//order-allocate",
-        name: "/order-allocate",
+        path: "/order-allocate",
+        name: "order-allocate",
         meta: {
           title: "订单分配",
         },
         component: () => import("@views/Admin/Order/OrderAllocate.vue"),
+      },
+      {
+        path: "/current-order",
+        name: "current-order",
+        meta: {
+          title: "进行中订单",
+        },
+        component: () => import("@views/Admin/Order/CurrentOrder.vue"),
+      },
+      {
+        path: "/finished-order",
+        name: "finished-order",
+        meta: {
+          title: "已完成订单",
+        },
+        component: () => import("@views/Admin/Order/FinishedOrder.vue"),
       },
       {
         path: "/drivers",
@@ -69,14 +85,6 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@views/DashBoard/DashBoard.vue"),
       },
       {
-        path: "/announcement",
-        name: "announcement",
-        meta: {
-          title: "公告管理",
-        },
-        component: () => import("../views/Admin/Driver/Announcement.vue"),
-      },
-      {
         path: "/vehicles",
         name: "vehicles",
         meta: {
@@ -84,11 +92,7 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () => import("@views/Admin/Vehicles/VehiclesManage.vue"),
       },
-      {
-        path: "/vehicle-view/:id",
-        name: "admin-vehicle-view",
-        component: () => import("@views/DashBoard/DashBoard.vue"),
-      },
+
       {
         path: "/transport-tasks",
         name: "admin-transport-tasks",
@@ -97,18 +101,14 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () => import("@views/Admin/Vehicles/TransportTasks.vue"),
       },
+
       {
-        path: "/transport-task-detail/:id",
-        name: "admin-transport-task-detail",
-        component: () => import("@components/Announcement/Announcement.vue"),
-      },
-      {
-        path: "/announcements",
-        name: "admin-announcements",
+        path: "/notice-manage",
+        name: "notice-manage",
         meta: {
           title: "公告管理",
         },
-        component: () => import("@components/Announcement/Announcement.vue"),
+        component: () => import("@views/Admin/Notice/NoticeManage.vue"),
       },
       // 司机路由
       {
