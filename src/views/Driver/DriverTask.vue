@@ -40,7 +40,6 @@
       <el-table-column fixed="right" label="操作" width="150">
         <template #default="scoped">
           <el-button
-            v-if="scoped.row.status === 0"
             type="primary"
             @click="openEdit(scoped.$index, scoped.row)"
             >标记为完成
@@ -79,9 +78,8 @@ const dialogVisible = reactive({
 const updateTable = () => {
   getTask().then((res) => {
     console.log(res);
-
-    page.total = res.data.total;
-    tableData.tableData = res.data.data;
+    page.total = res.data.length;
+    tableData.tableData = res.data;
   });
 };
 // 引入接口
@@ -91,8 +89,8 @@ const tableData = reactive({
     {
       carId: null,
       end: null,
-      phoneNum: "2",
-      start: "瓦达瓦达",
+      phoneNum: null,
+      start: null,
     },
   ],
   searchContent: "",
@@ -117,8 +115,10 @@ const handleSearch = () => {
 const openEdit = (index: number, row: any) => {
   dialogVisible.isShowEdit = true;
   updateTaskStatus(row.id).then((res) => {
-    console.log(res);
-    updateTable();
+   if(res.code === 200){
+    ElMessage.success("标记成功");
+     updateTable();
+    }
   });
 };
 function pageIndex(res: number) {

@@ -29,6 +29,16 @@
       width="30%"
       :before-close="handleClose"
     >
+    <!-- 选择司机 -->
+      <!-- <el-select v-model="tableData.driverSelectOptions" placeholder="请选择">
+        <el-option
+          v-for="item in tableData.driverSelectOptions"
+          :key="item.id"
+          :label="item.id"
+          :value="item.id"
+        ></el-option>
+      </el-select> -->
+    {{ tableData.driverSelectOptions }}
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible.isShowAdd = false">取消</el-button>
@@ -120,9 +130,9 @@ import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
 import { getUnallocated } from "@/api/Admin";
+import { getDriverList, getCarList } from "@/api/Admin";
 
 const store = useGlobalStore();
-
 const page = reactive({
   currentPage: 1,
   pageSize: 10,
@@ -134,21 +144,6 @@ const dialogVisible = reactive({
   isShowAdd: false,
 });
 // 引入接口
-// "id": 3,
-//             "createTime": "2023-04-16T14:45:18.000+0000",
-//             "updateTime": "2023-04-17T10:39:22.000+0000",
-//             "start": "我是默认字符串",
-//             "end": "我是默认字符串",
-//             "name": "我是默认字符串",
-//             "weight": 885,
-//             "isDanger": 11,
-//             "customId": 2,
-//             "fee": 169,
-//             "isDeleted": 0,
-//             "flag": 1,
-//             "situation": null,
-//             "driverId": null,
-//             "carId": null
 const tableData = reactive({
   tableData: [
     {
@@ -168,15 +163,35 @@ const tableData = reactive({
   ],
   searchContent: "",
   driverSelected: "",
-  driverSelectOptions: {
-    value: "",
-    label: "",
-  },
+  driverSelectOptions: [
+    {
+      id: 13,
+      createTime: "2023-04-18T04:53:18.000+0000",
+      updateTime: "2023-04-18T04:53:18.000+0000",
+      numid: "521",
+      name: "我是默认字符串",
+      phoneNum: "2",
+      hasDanger: 1,
+      password: "ac632e568953aa62a40737422bafee68",
+      isDelete: 0,
+      isUsed: 0,
+    },
+  ],
   carSelected: "",
-  cardSelectOptions: {
-    value: "",
-    label: "",
-  },
+  cardSelectOptions: [
+    {
+      id: 13,
+      createTime: "2023-04-18T04:53:18.000+0000",
+      updateTime: "2023-04-18T04:53:18.000+0000",
+      numid: "521",
+      name: "我是默认字符串",
+      phoneNum: "2",
+      hasDanger: 1,
+      password: "ac632e568953aa62a40737422bafee68",
+      isDelete: 0,
+      isUsed: 0,
+    },
+  ],
 });
 
 onMounted(() => {
@@ -221,6 +236,29 @@ const openEdit = (row: any) => {
 function pageIndex(res: number) {
   page.currentPage = res;
 }
+
+const getDriverOptions = () => {
+  getDriverList().then((res) => {
+    tableData.driverSelectOptions = res.data;
+  });
+};
+const getCarOptions = () => {
+  getCarList().then((res) => {
+    tableData.cardSelectOptions = res.data;
+  });
+};
+// 分配司机
+const handleDriver = (row: any) => {
+  console.log(row);
+  getDriverOptions();
+  openEdit(row);
+};
+// 分配车辆
+const handleCar = (row: any) => {
+  console.log(row);
+  getCarOptions();
+  openAdd(row);
+};
 </script>
 
 <style scoped>
