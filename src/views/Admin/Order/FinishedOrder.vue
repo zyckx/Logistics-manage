@@ -24,7 +24,7 @@
       <el-table-column prop="start" label="起点" />
       <el-table-column prop="end" label="终点" />
       <el-table-column prop="name" label="货物名称" />
-      <el-table-column prop="weight" label="重量" />
+      <el-table-column prop="weight" label="重量/kg" />
       <el-table-column prop="isDanger" label="是否危险">
         <template #default="scope">
           <el-tag v-if="scope.row.isDanger == 1" type="success">是</el-tag>
@@ -39,7 +39,7 @@
           <el-tag v-else type="danger">否</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="fee" label="运费" />
+      <el-table-column prop="fee" label="运费/元" />
       <el-table-column prop="driverId" label="司机">
         <template #default="scope">
           <el-tag

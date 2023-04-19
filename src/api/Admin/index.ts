@@ -62,3 +62,12 @@ export const addNotice = (formData: any) => {
 export const deleteNotice = (id: any) => {
   return http.post("/notice/delete/" + id);
 }
+
+// 
+export const findAllCars = () => {
+  return http.post("/manager/viewCars");
+}
+// 查看所有司机
+export const findAllDrivers = () => {
+  return http.post("/manager/viewnotice");
+}

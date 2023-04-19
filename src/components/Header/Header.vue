@@ -130,7 +130,17 @@ const handleCommand = (command: string) => {
         break;
     }
   } else if (command == "user") {
-    router.push("/dashboard");
+    switch (store.userFlag) {
+      case "1":
+        router.push("/admin");
+        break;
+      case "2":
+        router.push("/driver");
+        break;
+      case "3":
+        router.push("/customer");
+        break;
+    }
   }
 };
 </script>

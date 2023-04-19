@@ -25,18 +25,18 @@
         :model="tableData.addData"
       >
         <!-- "bands": "我是默认字符串",
-    "carId": 89,
+    "carId": 0,
     "color": "我是默认字符串" -->
-        <el-form-item label="车牌号" prop="bands">
+        <el-form-item label="车牌品牌" prop="bands">
           <el-input
             v-model="tableData.addData.bands"
-            placeholder="请输入车牌号"
+            placeholder="请输入车辆品牌"
           />
         </el-form-item>
-        <el-form-item label="车辆ID" prop="carId">
+        <el-form-item label="车牌号" prop="carId">
           <el-input
             v-model="tableData.addData.carId"
-            placeholder="请输入车辆ID"
+            placeholder="请输入车牌号"
           />
         </el-form-item>
         <el-form-item label="车辆颜色" prop="color">
@@ -95,6 +95,48 @@
       </template>
     </el-dialog>
     <!--数据展示-->
+    <el-table
+      :data="
+        tableData.tableData.slice(
+          (page.currentPage - 1) * page.pageSize,
+          page.currentPage * page.pageSize
+        )
+      "
+      border
+      style="width: 100%"
+    >
+      <!-- id: 1,
+      createTime: "2023-04-13T12:33:58.000+0000",
+      updateTime: "2023-04-14T04:35:05.000+0000",
+      bands: "奥迪",
+      color: "red",
+      carId: "鲁B2S19J",
+      isDeleted: 0,
+      isUsed: 1, -->
+      <el-table-column prop="id" label="车辆ID" />
+      <el-table-column prop="bands" label="车辆品牌" />
+      <el-table-column prop="color" label="车辆颜色" />
+      <el-table-column prop="carId" label="车牌号" />
+      <el-table-column prop="isUsed" label="是否使用">
+        <template #default="{ row }">
+          <el-tag v-if="row.isUsed === 1" type="success">使用中</el-tag>
+          <el-tag v-else type="danger">未使用</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createTime" label="创建时间">
+        <template #default="{ row }">
+          <span>{{ FormatTime(row.createTime) }}</span>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div style="margin-top: 0.625rem; text-align: right">
+      <pagination
+        :page-size="page.pageSize"
+        :page-total="page.total"
+        :disabled="false"
+        @page-index="pageIndex"
+      />
+    </div>
   </div>
 </template>
 
@@ -102,8 +144,8 @@
 import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
-import { addCar } from "@/api/Admin";
-
+import { addCar, findAllCars } from "@/api/Admin";
+import { FormatTime } from "@/utils/FormatTime";
 const store = useGlobalStore();
 
 const page = reactive({
@@ -116,43 +158,35 @@ const dialogVisible = reactive({
   isShowEdit: false,
   isShowAdd: false,
 });
-//             "createTime": "2023-04-16T14:45:18.000+0000",
-//             "updateTime": "2023-04-16T14:45:18.000+0000",
-//             "start": "我是默认字符串",
-//             "end": "我是默认字符串",
-//             "name": "我是默认字符串",
-//             "weight": 885,
-//             "isDanger": 11,
-//             "customId": 2,
-//             "fee": 169,
-//             "isDeleted": 0,
-//             "flag": null,
-//             "situation": null,
-//             "driverId": null,
-//             "carId": null
+
 // 引入接口
 const tableData = reactive({
   tableData: [
     {
-      bands: "我是默认字符串",
-      carId: 89,
-      color: "我是默认字符串",
+      id: 1,
+      createTime: "2023-04-13T12:33:58.000+0000",
+      updateTime: "2023-04-14T04:35:05.000+0000",
+      bands: "奥迪",
+      color: "red",
+      carId: "鲁B2S19J",
+      isDeleted: 0,
+      isUsed: 1,
     },
   ],
   searchContent: "",
   addData: {
-    bands: "我是默认字符串",
-    carId: 89,
-    color: "我是默认字符串",
+    bands: "",
+    carId: "",
+    color: "",
   },
   editData: {
-    bands: "我是默认字符串",
-    carId: 89,
-    color: "我是默认字符串",
+    bands: "",
+    carId: "",
+    color: "",
   },
 });
 const updateTableData = () => {
-  /* getTaskList().then((res) => {
+  findAllCars().then((res) => {
     if (res.code === 200) {
       tableData.tableData = res.data;
       console.log(res);
@@ -161,7 +195,7 @@ const updateTableData = () => {
     } else {
       ElMessage.error(res.msg);
     }
-  }); */
+  });
 };
 /* "end": "我是默认字符串",
     "fee": 169,
@@ -175,9 +209,9 @@ onMounted(() => {
 const openAdd = () => {
   dialogVisible.isShowAdd = true;
   tableData.addData = {
-    bands: "我是默认字符串",
-    carId: 89,
-    color: "我是默认字符串",
+    bands: "",
+    carId: "",
+    color: "",
   };
 };
 

@@ -1,23 +1,6 @@
 <template>
   <div class="container">
     <!-- 搜索、清除搜索、多选删除、添加 -->
-    <div class="handle-box">
-      <el-row>
-        <el-col :span="16">
-          <!--           搜索框 -->
-          <el-input
-            v-model="tableData.searchContent"
-            placeholder="搜索订单"
-            class="grid-content handle-input mr10"
-          />
-
-          <!-- 搜索按钮 -->
-          <el-button type="primary" :icon="Search" @click="handleSearch"
-            >搜索
-          </el-button>
-        </el-col>
-      </el-row>
-    </div>
 
     <!--数据展示-->
     <el-table
@@ -41,7 +24,7 @@
       <el-table-column prop="title" label="申请名称" />
       <el-table-column prop="request" label="申请内容" />
       <el-table-column prop="driverId" label="司机ID" />
-      <el-table-column prop="createTime" label="创建时间">
+      <el-table-column prop="createTime" label="提交申请时间">
         <template #default="scope">
           <span>{{ FormatTime(scope.row.createTime) }}</span>
         </template>

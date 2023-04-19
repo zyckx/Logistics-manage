@@ -139,12 +139,16 @@
       <el-table-column prop="start" label="起点" />
       <el-table-column prop="end" label="终点" />
       <el-table-column prop="name" label="货物名称" />
-      <el-table-column prop="weight" label="重量" />
-      <el-table-column prop="isDanger" label="是否危险" />
-      <el-table-column prop="customId" label="客户ID" />
+      <el-table-column prop="weight" label="重量/kg" />
+      <el-table-column prop="isDanger" label="是否危险" >
+            <template #default="scope">
+                <el-tag v-if="scope.row.isDanger == 1" type="success">是</el-tag>
+                <el-tag v-else type="danger">否</el-tag>
+            </template>
+      </el-table-column>
+
       <el-table-column prop="driverId" label="司机ID" />
       <el-table-column prop="carId" label="车辆ID" />
-      <el-table-column prop="situation" label="地点" />
       <el-table-column prop="flag" label="状态">
         <template #default="scope">
           <el-tag v-if="scope.row.flag === 1" type="success">审核通过</el-tag>
@@ -156,7 +160,7 @@
           >
         </template>
       </el-table-column>
-      <el-table-column prop="fee" label="运费" />
+      <el-table-column prop="fee" label="运费/元" />
     </el-table>
     <div style="margin-top: 0.625rem; text-align: right">
       <pagination
@@ -216,7 +220,6 @@ const tableData = reactive({
       customId: "",
       isDeleted: 0,
       flag: "",
-      situation: "",
       driverId: "",
       carId: "",
     },
@@ -225,7 +228,7 @@ const tableData = reactive({
   addData: {
     start: "",
     end: "",
-    name: "",
+    name: "", 
     weight: 0,
     isDanger: 0,
     fee: 0,

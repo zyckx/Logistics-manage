@@ -107,6 +107,60 @@
         </span>
       </template>
     </el-dialog>
+    <!--数据展示-->
+    <el-table
+      :data="
+        tableData.tableData.slice(
+          (page.currentPage - 1) * page.pageSize,
+          page.currentPage * page.pageSize
+        )
+      "
+      border
+      style="width: 100%"
+    >
+      <!-- id: 3,
+      createTime: "2023-04-13T11:49:39.000+0000",
+      updateTime: "2023-04-14T04:33:54.000+0000",
+      numid: "01",
+      name: "张亮",
+      phoneNum: "176623",
+      hasDanger: 1,
+      password: "da9de09da75010098a245c62f75a0b7b",
+      isDelete: 0,
+      isUsed: 1, -->
+      <el-table-column prop="id" label="司机ID" />
+
+      <el-table-column prop="numid" label="司机账号" />
+      <el-table-column prop="name" label="司机姓名" />
+      <el-table-column prop="createTime" label="创建时间">
+        <template #default="{ row }">
+          <span>{{ FormatTime(row.createTime) }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="phoneNum" label="司机手机号" />
+      <el-table-column prop="hasDanger" label="资格证">
+        <template #default="{ row }">
+          <el-tag v-if="row.hasDanger === 1" type="success">有</el-tag>
+          <el-tag v-else type="danger">无</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="password" label="司机密码" />
+      <el-table-column prop="isUsed" label="是否已经使用">
+        <template #default="{ row }">
+          <el-tag v-if="row.isUsed === 1" type="success">已使用</el-tag>
+          <el-tag v-else type="danger">未使用</el-tag>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div style="margin-top: 0.625rem; text-align: right">
+      <pagination
+        :page-size="page.pageSize"
+        :page-total="page.total"
+        :disabled="false"
+        @page-index="pageIndex"
+      />
+    </div>
   </div>
 </template>
 
@@ -114,9 +168,8 @@
 import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
-import { addDriver } from "@/api/Admin";
-import { multiply } from "lodash";
-
+import { addDriver, findAllDrivers } from "@/api/Admin";
+import { FormatTime } from "@/utils/FormatTime";
 const store = useGlobalStore();
 
 const page = reactive({
@@ -129,30 +182,20 @@ const dialogVisible = reactive({
   isShowEdit: false,
   isShowAdd: false,
 });
-// "id": 3,
-//             "createTime": "2023-04-16T14:45:18.000+0000",
-//             "updateTime": "2023-04-16T14:45:18.000+0000",
-//             "start": "我是默认字符串",
-//             "end": "我是默认字符串",
-//             "name": "我是默认字符串",
-//             "weight": 885,
-//             "isDanger": 11,
-//             "customId": 2,
-//             "fee": 169,
-//             "isDeleted": 0,
-//             "flag": null,
-//             "situation": null,
-//             "driverId": null,
-//             "carId": null
 // 引入接口
 const tableData = reactive({
   tableData: [
     {
+      id: 3,
+      createTime: "2023-04-13T11:49:39.000+0000",
+      updateTime: "2023-04-14T04:33:54.000+0000",
+      numid: "01",
+      name: "张亮",
+      phoneNum: "176623",
       hasDanger: 1,
-      name: "我是默认字符串",
-      numid: 521,
-      password: "我是默认字符串",
-      phoneNum: 2,
+      password: "da9de09da75010098a245c62f75a0b7b",
+      isDelete: 0,
+      isUsed: 1,
     },
   ],
   searchContent: "",
@@ -161,34 +204,28 @@ const tableData = reactive({
     name: "",
     numid: 0,
     password: "",
-    phoneNum: 0,
+    phoneNum: "",
   },
   editData: {
     hasDanger: 1,
-    name: "我是默认字符串",
-    numid: 521,
-    password: "我是默认字符串",
-    phoneNum: 2,
+    name: "",
+    //数字如何为空
+    numid: 0,
+    password: "",
+    phoneNum: "",
   },
 });
 const updateTableData = () => {
-  /* getTaskList().then((res) => {
+  findAllDrivers().then((res) => {
     if (res.code === 200) {
       tableData.tableData = res.data;
       console.log(res);
-
       page.total = res.data.length;
     } else {
       ElMessage.error(res.msg);
     }
-  }); */
+  });
 };
-/* "end": "我是默认字符串",
-    "fee": 169,
-    "isDanger": 11,
-    "name": "我是默认字符串",
-    "start": "我是默认字符串",
-    "weight": 885 */
 onMounted(() => {
   updateTableData();
 });
@@ -196,10 +233,10 @@ const openAdd = () => {
   dialogVisible.isShowAdd = true;
   tableData.addData = {
     hasDanger: 1,
-    name: "我是默认字符串",
-    numid: 521,
-    password: "我是默认字符串",
-    phoneNum: 2,
+    name: "",
+    numid: 0,
+    password: "",
+    phoneNum: "",
   };
 };
 
