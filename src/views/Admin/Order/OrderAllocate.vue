@@ -5,16 +5,7 @@
       <el-row>
         <el-col :span="16">
           <!--           搜索框 -->
-          <el-input
-            v-model="tableData.searchContent"
-            placeholder="搜索"
-            class="grid-content handle-input mr10"
-          />
 
-          <!-- 搜索按钮 -->
-          <el-button type="primary" :icon="Search" @click="handleSearch"
-            >搜索
-          </el-button>
           <!--添加按钮-->
           <el-button type="primary" :icon="Search" @click="openAdd"
             >发布任务
@@ -34,7 +25,7 @@
         <el-option
           v-for="item in tableData.cardSelectOptions"
           :key="item.id"
-          :label="item.name"
+          :label="item.carId"
           :value="item.id"
         ></el-option>
       </el-select>
@@ -171,7 +162,7 @@ const tableData = reactive({
       flag: 1,
       situation: null,
       driverId: null,
-      carId: null,
+      carId: "",
     },
   ],
   searchContent: "",
@@ -194,16 +185,14 @@ const tableData = reactive({
   TaskId: "",
   cardSelectOptions: [
     {
-      id: 13,
-      createTime: "2023-04-18T04:53:18.000+0000",
-      updateTime: "2023-04-18T04:53:18.000+0000",
-      numid: "521",
-      name: "我是默认字符串",
-      phoneNum: "2",
-      hasDanger: 1,
-      password: "ac632e568953aa62a40737422bafee68",
-      isDelete: 0,
+      bands: "我是默认字符串",
+      carId: "89",
+      color: "我是默认字符串",
+      createTime: "2023-04-19T02:39:44.000+0000",
+      id: 12,
+      isDeleted: 0,
       isUsed: 0,
+      updateTime: "2023-04-19T02:39:44.000+0000",
     },
   ],
 });

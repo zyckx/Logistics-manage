@@ -5,16 +5,7 @@
       <el-row>
         <el-col :span="16">
           <!--           搜索框 -->
-          <el-input
-            v-model="tableData.searchContent"
-            placeholder="搜索任务"
-            class="grid-content handle-input mr10"
-          />
 
-          <!-- 搜索按钮 -->
-          <el-button type="primary" :icon="Search" @click="handleSearch"
-            >搜索
-          </el-button>
           <!--添加按钮-->
           <el-button type="primary" :icon="Search" @click="openAdd"
             >发布任务
@@ -63,11 +54,10 @@
           />
         </el-form-item>
         <el-form-item label="是否危险" prop="isDanger">
-          <el-input
-            v-model.number="tableData.addData.isDanger"
-            placeholder="是否危险"
-            maxlength="10"
-          />
+          <el-select v-model="tableData.addData.isDanger" placeholder="请选择">
+            <el-option label="是" value="1" />
+            <el-option label="否" value="0" />
+          </el-select>
         </el-form-item>
 
         <el-form-item label="运费" prop="fee">
@@ -184,6 +174,7 @@ import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
 import { publishTask, getTaskList } from "@/api/Customer";
+import { log } from "console";
 
 const store = useGlobalStore();
 
@@ -260,12 +251,6 @@ const updateTableData = () => {
     }
   });
 };
-/* "end": "我是默认字符串",
-    "fee": 169,
-    "isDanger": 11,
-    "name": "我是默认字符串",
-    "start": "我是默认字符串",
-    "weight": 885 */
 onMounted(() => {
   updateTableData();
 });
@@ -282,7 +267,7 @@ const openAdd = () => {
 };
 
 const handleSearch = () => {
-  console.log(tableData.searchContent);
+  console.log("搜索");
 };
 const handleClose = () => {
   dialogVisible.isShowAdd = false;

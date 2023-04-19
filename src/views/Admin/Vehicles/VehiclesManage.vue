@@ -4,20 +4,9 @@
     <div class="handle-box">
       <el-row>
         <el-col :span="16">
-          <!--           搜索框 -->
-          <el-input
-            v-model="tableData.searchContent"
-            placeholder="搜索任务"
-            class="grid-content handle-input mr10"
-          />
-
-          <!-- 搜索按钮 -->
-          <el-button type="primary" :icon="Search" @click="handleSearch"
-            >搜索
-          </el-button>
           <!--添加按钮-->
           <el-button type="primary" :icon="Search" @click="openAdd"
-            >发布任务
+            >添加车辆
           </el-button>
         </el-col>
       </el-row>
@@ -106,29 +95,6 @@
       </template>
     </el-dialog>
     <!--数据展示-->
-    <el-table
-      :data="
-        tableData.tableData.slice(
-          (page.currentPage - 1) * page.pageSize,
-          page.currentPage * page.pageSize
-        )
-      "
-      border
-      style="width: 100%"
-    >
-      <el-table-column type="index" label="序号" />
-      <el-table-column prop="bands" label="车牌号" />
-      <el-table-column prop="carId" label="车辆ID" />
-      <el-table-column prop="color" label="车辆 颜色" />
-    </el-table>
-    <div style="margin-top: 0.625rem; text-align: right">
-      <pagination
-        :page-size="page.pageSize"
-        :page-total="page.total"
-        :disabled="false"
-        @page-index="pageIndex"
-      />
-    </div>
   </div>
 </template>
 

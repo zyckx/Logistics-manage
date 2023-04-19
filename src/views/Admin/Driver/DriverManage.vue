@@ -5,19 +5,10 @@
       <el-row>
         <el-col :span="16">
           <!--           搜索框 -->
-          <el-input
-            v-model="tableData.searchContent"
-            placeholder="搜索任务"
-            class="grid-content handle-input mr10"
-          />
 
-          <!-- 搜索按钮 -->
-          <el-button type="primary" :icon="Search" @click="handleSearch"
-            >搜索
-          </el-button>
           <!--添加按钮-->
           <el-button type="primary" :icon="Search" @click="openAdd"
-            >发布任务
+            >添加司机
           </el-button>
         </el-col>
       </el-row>
@@ -116,45 +107,6 @@
         </span>
       </template>
     </el-dialog>
-    <!--数据展示-->
-    <el-table
-      :data="
-        tableData.tableData.slice(
-          (page.currentPage - 1) * page.pageSize,
-          page.currentPage * page.pageSize
-        )
-      "
-      border
-      style="width: 100%"
-    >
-      <!--  hasDanger: 1,
-      name: "我是默认字符串",
-      numid: 521,
-      password: "我是默认字符串",
-      phoneNum: 2, -->
-      <el-table-column prop="name" label="姓名" />
-      <el-table-column prop="numid" label="账号" />
-      <el-table-column prop="password" label="密码" />
-      <el-table-column prop="phoneNum" label="手机号" />
-
-      <el-table-column prop="hasDanger" label="是否拥有资格证">
-        <template #default="{ row }">
-          <el-tag v-if="row.hasDanger == 1" type="success">是</el-tag>
-          <el-tag v-else type="danger">否</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="customId" label="客户ID" />
-      <el-table-column prop="driverId" label="司机ID" />
-      <el-table-column prop="carId" label="车辆ID" />
-    </el-table>
-    <div style="margin-top: 0.625rem; text-align: right">
-      <pagination
-        :page-size="page.pageSize"
-        :page-total="page.total"
-        :disabled="false"
-        @page-index="pageIndex"
-      />
-    </div>
   </div>
 </template>
 
@@ -163,6 +115,7 @@ import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
 import { addDriver } from "@/api/Admin";
+import { multiply } from "lodash";
 
 const store = useGlobalStore();
 
@@ -205,10 +158,10 @@ const tableData = reactive({
   searchContent: "",
   addData: {
     hasDanger: 1,
-    name: "我是默认字符串",
-    numid: 521,
-    password: "我是默认字符串",
-    phoneNum: 2,
+    name: "",
+    numid: 0,
+    password: "",
+    phoneNum: 0,
   },
   editData: {
     hasDanger: 1,

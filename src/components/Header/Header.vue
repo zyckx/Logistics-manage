@@ -21,7 +21,7 @@
       <div class="header-user-con">
         <!-- 消息中心 -->
         <div class="btn-bell">
-          <el-tooltip
+          <!-- <el-tooltip
             effect="dark"
             :content="message ? `有${message}条未读消息` : `消息中心`"
             placement="bottom"
@@ -32,7 +32,7 @@
               </el-icon>
             </router-link>
           </el-tooltip>
-          <span class="btn-bell-badge" v-if="message"></span>
+          <span class="btn-bell-badge" v-if="message"></span> -->
         </div>
 
         <!-- 用户头像 -->
@@ -43,7 +43,7 @@
         <!-- 用户名下拉菜单 -->
         <el-dropdown class="user-name" trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
-            {{ username }}
+            {{ store.userinfo.name }}
             <el-icon :size="20">
               <caret-bottom />
             </el-icon>
@@ -64,7 +64,9 @@
 
 <script setup lang="ts">
 import { useGlobalStore } from "@/store/UserStore";
-const username = localStorage.getItem("ms_username");
+import { adminLogout } from "@/api/Admin";
+import { customerLogout } from "@/api/Customer";
+import { driverLogout } from "@/api/Driver";
 const message = 2;
 const props = defineProps<{
   roleName: {
@@ -91,20 +93,46 @@ onMounted(() => {
 const router = useRouter();
 const handleCommand = (command: string) => {
   if (command == "loginout") {
-    localStorage.removeItem("ms_username");
-    localStorage.setItem("token", "false");
-    router.push("/login");
+    switch (store.userFlag) {
+      case "1":
+        adminLogout().then((res) => {
+          if (res.code == 200) {
+            ElNotification({
+              title: "退出成功",
+              message: h("i", { style: "color: teal" }, "请重新登录"),
+            });
+            router.push("/login");
+          }
+        });
+        break;
+      case "2":
+        driverLogout().then((res) => {
+          if (res.code == 200) {
+            ElNotification({
+              title: "退出成功",
+              message: h("i", { style: "color: teal" }, "请重新登录"),
+            });
+            router.push("/login");
+          }
+        });
+
+        break;
+      case "3":
+        customerLogout().then((res) => {
+          if (res.code == 200) {
+            ElNotification({
+              title: "退出成功",
+              message: h("i", { style: "color: teal" }, "请重新登录"),
+            });
+            router.push("/login");
+          }
+        });
+        break;
+    }
   } else if (command == "user") {
-    router.push("/user");
+    router.push("/dashboard");
   }
 };
-
-// defineExpose 可以省略
-defineExpose({
-  username,
-  message,
-  handleCommand,
-});
 </script>
 
 <style scoped>

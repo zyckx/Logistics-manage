@@ -30,34 +30,38 @@
       border
       style="width: 100%"
     >
+      <!-- id: 1,
+      createTime: "2023-04-13T12:03:13.000+0000",
+      updateTime: "2023-04-13T12:03:13.000+0000",
+      title: "病假申请",
+      request: "管理员您好，我生病了，想请个假，您看行吗",
+      driverId: 3,
+      flag: null, -->
       <el-table-column type="index" label="序号" width="50" />
-      <el-table-column prop="start" label="起点" />
-      <el-table-column prop="end" label="终点" />
-      <el-table-column prop="name" label="货物名称" />
-      <el-table-column prop="weight" label="重量" />
-      <el-table-column prop="isDanger" label="是否危险">
+      <el-table-column prop="title" label="申请名称" />
+      <el-table-column prop="request" label="申请内容" />
+      <el-table-column prop="driverId" label="司机ID" />
+      <el-table-column prop="createTime" label="创建时间">
         <template #default="scope">
-          <el-tag v-if="scope.row.isDanger == 1" type="success">是</el-tag>
-          <el-tag v-else type="danger">否</el-tag>
+          <span>{{ FormatTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="customId" label="客户ID" />
-
-      <el-table-column prop="customName" label="客户名称" />
-      <el-table-column prop="phoneNum" label="客户电话" />
-      <el-table-column prop="fee" label="运费" />
+      <el-table-column prop="flag" label="是否审核通过">
+        <template #default="scope">
+          <el-tag
+            v-if="scope.row.flag == 0 || scope.row.flag == null"
+            type="danger"
+            >否</el-tag
+          >
+          <el-tag v-else type="success">是</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
         <template #default="scope">
-          <el-button
-            type="success"
-            size="small"
-            @click="openEdit(scope.$index, scope.row)"
+          <el-button type="success" size="small" @click="openEdit(scope.row)"
             >同意
           </el-button>
-          <el-button
-            type="danger"
-            size="small"
-            @click="deleteData(scope.$index, scope.row)"
+          <el-button type="danger" size="small" @click="deleteData(scope.row)"
             >拒绝</el-button
           >
         </template>
@@ -79,6 +83,7 @@ import { useGlobalStore } from "@/store/UserStore";
 import { Search } from "@element-plus/icons-vue";
 import Pagination from "@components/tables/Pagination.vue";
 import { getApplyList, checkApply } from "@/api/Admin/Apply";
+import { FormatTime } from "@/utils/FormatTime";
 const store = useGlobalStore();
 
 const page = reactive({
@@ -92,23 +97,26 @@ const page = reactive({
 const tableData = reactive({
   tableData: [
     {
-      start: "",
-      end: "",
-      name: "",
-      weight: "",
-      isDanger: "",
-      customId: null,
-      fee: null,
-      customName: "",
-      phoneNum: "",
+      id: 1,
+      createTime: "2023-04-13T12:03:13.000+0000",
+      updateTime: "2023-04-13T12:03:13.000+0000",
+      title: "病假申请",
+      request: "管理员您好，我生病了，想请个假，您看行吗",
+      driverId: 3,
+      flag: null,
     },
   ],
   searchContent: "",
+  checkApply: {
+    ReqId: 0,
+    flag: 0,
+  },
 });
 
 const getTableData = () => {
   getApplyList().then((res) => {
     tableData.tableData = res.data;
+    page.total = res.data.length;
   });
 };
 onMounted(() => {
@@ -118,9 +126,12 @@ const handleSearch = () => {
   console.log(tableData.searchContent);
 };
 
-const openEdit = (index: number, row: any) => {
-  console.log(index, row);
-  checkApply(row.id, 1).then((res) => {
+const openEdit = (row: any) => {
+  tableData.checkApply.ReqId = row.id;
+  tableData.checkApply.flag = 1;
+  checkApply(tableData.checkApply).then((res) => {
+    console.log(res);
+
     if (res.code == 200) {
       ElMessage.success("审核通过");
       getTableData();
@@ -129,9 +140,10 @@ const openEdit = (index: number, row: any) => {
     }
   });
 };
-const deleteData = (index: number, row: any) => {
-  console.log(index, row);
-  checkApply(row.id, 0).then((res) => {
+const deleteData = (row: any) => {
+  tableData.checkApply.ReqId = row.id;
+  tableData.checkApply.flag = 0;
+  checkApply(tableData.checkApply).then((res) => {
     if (res.code == 200) {
       ElMessage.success("拒绝");
       getTableData();

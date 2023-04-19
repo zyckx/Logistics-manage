@@ -5,15 +5,7 @@
       <el-row>
         <el-col :span="16">
           <!--           搜索框 -->
-          <el-input
-            v-model="tableData.searchContent"
-            placeholder="搜索任务"
-            class="grid-content handle-input mr10"
-          />
-          <!-- 搜索按钮 -->
-          <el-button type="primary" :icon="Search" @click="handleSearch"
-            >搜索
-          </el-button>
+
           <!--添加按钮-->
           <el-button type="primary" :icon="Search" @click="openAdd"
             >发布公告

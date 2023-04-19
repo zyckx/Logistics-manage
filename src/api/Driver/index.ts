@@ -6,8 +6,8 @@ export const driverLogin = (params: any) => {
 };
 // 司机登出
 
-export const driverLogout = (params: any) => {
-  return http.post("/driver/driverlogout", params);
+export const driverLogout = () => {
+  return http.post("/driver/driverlogout");
 };
 
 // 获取司机个人信息

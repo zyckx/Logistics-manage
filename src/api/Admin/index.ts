@@ -1,7 +1,12 @@
 import http from "@/axios";
+// 登录
 export const adminLogin = (formData: any) => {
   return http.post("/manager/managerlogin", formData);
 };
+// 退出登录
+export const adminLogout = () => {
+  return http.post("/manager/managerlogout");
+}
 // 待审核
 export const getCheckList = () => {
   return http.get(
