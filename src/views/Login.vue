@@ -85,7 +85,7 @@
           >
             <template #prepend>
               <el-icon :size="20">
-                <Lock />
+                <User />
               </el-icon>
             </template>
           </el-input>
@@ -93,12 +93,12 @@
         <el-form-item prop="phoneNum">
           <el-input
             type="text"
-            placeholder="phoneNum"
+            placeholder="请输入手机号"
             v-model.number="Form.registerForm.phoneNum"
           >
             <template #prepend>
               <el-icon :size="20">
-                <Lock />
+                <More />
               </el-icon>
             </template>
           </el-input>
@@ -106,7 +106,7 @@
         <el-form-item prop="password">
           <el-input
             type="password"
-            placeholder="password"
+            placeholder="请输入密码"
             v-model="Form.registerForm.password"
           >
             <template #prepend>
@@ -151,7 +151,7 @@ const Form = reactive({
     account: "",
     name: "",
     password: "",
-    phoneNum: 0,
+    phoneNum: null,
   },
   userFlag: "3",
   userId: "test",
